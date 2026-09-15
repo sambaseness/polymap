@@ -91,7 +91,7 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> {
                   left: 20,
                   right: wide ? null : 20,
                   width: wide ? 400 : null,
-                  top: size.height * 0.60,
+                  top: pad.top + 122,
                   child: _FloorBanner(
                     floor: floor,
                     onTap: () => PmNav.push<void>(context, ArFloorScreen(floor: floor)),
