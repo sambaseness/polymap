@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../data/models.dart';
 import '../../navigation.dart';
 import '../../theme/pm_colors.dart';
 import '../../theme/pm_text.dart';
@@ -12,12 +13,28 @@ import 'ar_widgets.dart';
 
 /// 17 — AR : changement d'étage. Stairs, step count, level selector.
 class ArFloorScreen extends StatelessWidget {
-  const ArFloorScreen({super.key});
+  const ArFloorScreen({super.key, this.floor});
+
+  /// The level change to describe; falls back to the design's demo values.
+  final FloorChange? floor;
+
+  static const FloorChange _demo = FloorChange(
+    title: 'Montez au 1er étage',
+    detail: 'Escalier B, à 18 m — puis 2e porte à gauche',
+    stairs: 'Escalier B',
+    fromTo: 'RDC → 1er étage',
+    steps: 22,
+    then: 'Ensuite : 2e porte à gauche',
+    thenDetail: "Salle C-107 · à 34 m après l'escalier",
+  );
 
   @override
   Widget build(BuildContext context) {
     final pad = MediaQuery.paddingOf(context);
-    final h = MediaQuery.sizeOf(context).height;
+    final size = MediaQuery.sizeOf(context);
+    final h = size.height;
+    final wide = size.width >= 720;
+    final f = floor ?? _demo;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
@@ -56,7 +73,8 @@ class ArFloorScreen extends StatelessWidget {
               ),
               Positioned(
                 left: 20,
-                right: 20,
+                right: wide ? null : 20,
+                width: wide ? 400 : null,
                 top: pad.top + 22,
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
@@ -77,10 +95,10 @@ class ArFloorScreen extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text('Escalier B',
+                              Text(f.stairs,
                                   style: PmText.grotesk(25, weight: FontWeight.w700, color: PmFixed.onOchre, height: 1.05)),
                               const SizedBox(height: 2),
-                              Text('RDC → 1er étage · 22 marches',
+                              Text('${f.fromTo} · ${f.steps} marches',
                                   style: PmText.sans(13.5, color: PmFixed.onOchre.withValues(alpha: .82))),
                             ],
                           ),
@@ -114,7 +132,8 @@ class ArFloorScreen extends StatelessWidget {
               ),
               Positioned(
                 left: 20,
-                right: 20,
+                right: wide ? null : 20,
+                width: wide ? 400 : null,
                 bottom: pad.bottom + 82,
                 child: ArGlass(
                   radius: 15,
@@ -123,10 +142,10 @@ class ArFloorScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Ensuite : 2e porte à gauche',
+                      Text(f.then,
                           style: PmText.sans(13.5, weight: FontWeight.w600, color: PmFixed.white)),
                       const SizedBox(height: 3),
-                      Text("Salle C-107 · à 34 m après l'escalier",
+                      Text(f.thenDetail,
                           style: PmText.sans(12.5, color: PmFixed.white.withValues(alpha: .62))),
                     ],
                   ),
@@ -134,7 +153,8 @@ class ArFloorScreen extends StatelessWidget {
               ),
               Positioned(
                 left: 20,
-                right: 20,
+                right: wide ? null : 20,
+                width: wide ? 400 : null,
                 bottom: pad.bottom + 12,
                 child: Row(
                   children: <Widget>[
@@ -152,7 +172,7 @@ class ArFloorScreen extends StatelessWidget {
                       child: PmButton(
                         label: 'Étage atteint',
                         variant: PmButtonVariant.brand,
-                        onTap: () => PmNav.push<void>(context, const ArrivalScreen()),
+                        onTap: () => PmNav.pushInShell(context, const ArrivalScreen()),
                       ),
                     ),
                   ],

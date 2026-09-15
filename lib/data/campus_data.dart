@@ -57,6 +57,19 @@ abstract final class CampusData {
         RouteStep('4', 'Passer devant le Restaurant ESP', '60 m'),
         RouteStep('5', 'Entrée du Département Génie Informatique', '30 m'),
       ],
+      arLabels: <RouteLabel>[
+        RouteLabel('C-104 · Bureau', PmTint.blue, along: 7, side: -1.3),
+        RouteLabel('C-107 · TD', PmTint.brown, along: 12, side: 1.4),
+      ],
+      floorChange: FloorChange(
+        title: 'Montez au 1er étage',
+        detail: 'Escalier B, à 18 m — puis 2e porte à gauche',
+        stairs: 'Escalier B',
+        fromTo: 'RDC → 1er étage',
+        steps: 22,
+        then: 'Ensuite : 2e porte à gauche',
+        thenDetail: "Salle C-107 · à 34 m après l'escalier",
+      ),
     ),
     CampusRoute(
       from: 'Restaurant ESP',
@@ -72,6 +85,10 @@ abstract final class CampusData {
         RouteStep('2', "Remonter l'allée bordant le CEPECS", '95 m'),
         RouteStep('3', 'Tourner à droite après la Bibliothèque', '70 m'),
         RouteStep('4', "Entrée de l'amphithéâtre, porte est", '40 m'),
+      ],
+      arLabels: <RouteLabel>[
+        RouteLabel('CEPECS', PmTint.blue, along: 7, side: -1.4),
+        RouteLabel("Bibliothèque de l'ESP", PmTint.brown, along: 14, side: 1.6),
       ],
     ),
     CampusRoute(
@@ -89,6 +106,10 @@ abstract final class CampusData {
         RouteStep('3', "Longer le terrain par l'ouest", '130 m'),
         RouteStep('4', "Traverser l'allée centrale", '80 m'),
         RouteStep('5', "Secrétariat de l'ESP, 1re porte", '40 m'),
+      ],
+      arLabels: <RouteLabel>[
+        RouteLabel('Pavillon G', PmTint.brown, along: 7, side: -1.4),
+        RouteLabel('Pavillon B', PmTint.brown, along: 11, side: 1.5),
       ],
     ),
   ];

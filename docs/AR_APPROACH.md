@@ -3,11 +3,25 @@
 Ce document cadre la **seule** partie de l'app qui n'est pas encore implémentée
 « pour de vrai » : le guidage en réalité augmentée (écrans 15, 16, 17).
 
-Aujourd'hui les trois écrans AR sont des **coquilles fidèles au design** :
-flux caméra arrière réel (`CameraBackdrop`), flèche flottante, cartouches
-« Prochain virage », étiquettes de portes, minimap, changement d'étage — mais
-la flèche est ancrée à l'écran, pas au couloir. Tout le reste de l'app est
-fonctionnel et ne dépend pas de ce choix.
+## État actuel (implémenté)
+
+* **Rendu** : `lib/ar/ar_scene.dart` dessine une chaîne de flèches 3D
+  (chevrons épais, faces ombrées, halo au sol) couchées le long de
+  l'itinéraire, projetées en perspective (focale ≈ 62° vertical), la plus
+  proche flottant légèrement, les suivantes s'estompant avec la distance.
+  Étiquettes de portes = panneaux ancrés dans le même repère métrique.
+* **Orientation** : `ArPoseController` fusionne la boussole inclinée
+  (accéléromètre + magnétomètre via `sensors_plus`) ou `deviceorientation`
+  sur le web, lissée, plus un décalage au doigt (glisser pour regarder,
+  double-tap pour recentrer). Sans capteurs (ordinateur), la vue démarre dans
+  l'axe du chemin.
+* **Chemin** : `ArPath.fromRoute` convertit le tracé de la carte en mètres
+  (échelle calée sur la distance annoncée), nord = haut de la carte, origine
+  = position du marcheur.
+
+Ce qui reste, c'est donc uniquement **la position** (où est l'origine du
+chemin, et comment elle avance). Tout le reste de l'app est fonctionnel et ne
+dépend pas de ce choix.
 
 ## Ce que le design exige de l'AR
 
@@ -96,8 +110,9 @@ mode dégradé quand ARCore est absent.
 3. Étape 2 : intégrer `ar_flutter_plugin_2`, ancrer la flèche sur le prochain
    nœud du graphe, brancher l'écran de calibrage sur l'état de suivi
    (`TrackingState`) au lieu du compteur simulé.
-4. Étape 3 : étiquettes de portes = nœuds « porte » projetés dans la vue ;
-   changement d'étage = nœud « escalier » avec transition d'étage.
+4. Étape 3 : étiquettes de portes = nœuds « porte » (déjà rendues par
+   `ArScene`, il suffit de les alimenter depuis le graphe) ; changement
+   d'étage = nœud « escalier » avec transition d'étage.
 5. Pilote sur **un** bâtiment (Pavillon C, déjà modélisé dans l'app), mesurer
    la dérive, puis étendre.
 

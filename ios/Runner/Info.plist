@@ -4,6 +4,10 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Caméra — nécessaire au mode AR et à la lecture des QR codes des portes.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Boussole — pour orienter la flèche à l'écran.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

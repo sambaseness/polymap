@@ -6,6 +6,7 @@ import '../data/models.dart';
 import '../navigation.dart';
 import '../state/app_state.dart';
 import '../theme/pm_colors.dart';
+import '../theme/pm_layout.dart';
 import '../theme/pm_text.dart';
 import '../widgets/glyphs.dart';
 import '../widgets/pm_button.dart';
@@ -23,135 +24,137 @@ class RoomScreen extends StatelessWidget {
     final fav = context.select<AppState, bool>((s) => s.isFavorite(code));
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.fromLTRB(22, pad.top + 20, 22, 22),
-            decoration: BoxDecoration(
-              color: pm.surf2,
-              border: Border(bottom: BorderSide(color: pm.line)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Padding(padding: EdgeInsets.only(bottom: 14), child: PmBackButton(size: 32)),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const PmSectionLabel('Pavillon C · 1er étage', bottom: 6),
-                          Text('Salle $code',
-                              style: PmText.grotesk(30, weight: FontWeight.w700, color: pm.ink, ls: -0.02)),
-                          const SizedBox(height: 2),
-                          Text('Salle de travaux dirigés', style: PmText.sans(14, color: pm.ink2)),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    const PmStatusBadge(PmStatus.free),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.fromLTRB(22, 18, 22, 18),
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    for (final (i, (k, v)) in const <(String, String)>[('Capacité', '32 places'), ('Étage', 'R+1'), ('Libre', '1h20')].indexed) ...<Widget>[
-                      if (i > 0) const SizedBox(width: 10),
+      body: PmPage(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(22, pad.top + 20, 22, 22),
+              decoration: BoxDecoration(
+                color: pm.surf2,
+                border: Border(bottom: BorderSide(color: pm.line)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Padding(padding: EdgeInsets.only(bottom: 14), child: PmBackButton(size: 32)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
                       Expanded(
-                        child: PmCard(
-                          padding: const EdgeInsets.all(13),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              PmSectionLabel(k, size: 9, ls: 0.14, bottom: 6),
-                              FittedBox(
-                                fit: BoxFit.scaleDown,
-                                alignment: Alignment.centerLeft,
-                                child: Text(v, maxLines: 1, style: PmText.grotesk(19, color: pm.ink)),
-                              ),
-                            ],
-                          ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            const PmSectionLabel('Pavillon C · 1er étage', bottom: 6),
+                            Text('Salle $code',
+                                style: PmText.grotesk(30, weight: FontWeight.w700, color: pm.ink, ls: -0.02)),
+                            const SizedBox(height: 2),
+                            Text('Salle de travaux dirigés', style: PmText.sans(14, color: pm.ink2)),
+                          ],
                         ),
                       ),
+                      const SizedBox(width: 14),
+                      const PmStatusBadge(PmStatus.free),
                     ],
-                  ],
-                ),
-                const SizedBox(height: 12),
-                const PmSectionLabel('Équipement', size: 9.5, ls: 0.14, bottom: 9),
-                Wrap(
-                  spacing: 7,
-                  runSpacing: 7,
-                  children: <Widget>[
-                    for (final e in CampusData.roomEquipment)
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(color: pm.surf2, borderRadius: BorderRadius.circular(999)),
-                        child: Text(e, style: PmText.sans(12.5, weight: FontWeight.w500, color: pm.ink)),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                PmCard(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(22, 18, 22, 18),
+                children: <Widget>[
+                  Row(
                     children: <Widget>[
-                      const PmSectionLabel('Prochaines occupations', size: 9.5, ls: 0.14, bottom: 12),
-                      for (var i = 0; i < CampusData.todaySchedule.length; i++) ...<Widget>[
-                        if (i > 0) const SizedBox(height: 11),
-                        OccupationRow(course: CampusData.todaySchedule[i]),
+                      for (final (i, (k, v)) in const <(String, String)>[('Capacité', '32 places'), ('Étage', 'R+1'), ('Libre', '1h20')].indexed) ...<Widget>[
+                        if (i > 0) const SizedBox(width: 10),
+                        Expanded(
+                          child: PmCard(
+                            padding: const EdgeInsets.all(13),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                PmSectionLabel(k, size: 9, ls: 0.14, bottom: 6),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(v, maxLines: 1, style: PmText.grotesk(19, color: pm.ink)),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ],
                   ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(22, 0, 22, pad.bottom + 12),
-            child: Row(
-              children: <Widget>[
-                Semantics(
-                  button: true,
-                  label: fav ? 'Retirer des favoris' : 'Ajouter aux favoris',
-                  child: Material(
-                    color: pm.surf,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      side: BorderSide(color: pm.line),
+                  const SizedBox(height: 12),
+                  const PmSectionLabel('Équipement', size: 9.5, ls: 0.14, bottom: 9),
+                  Wrap(
+                    spacing: 7,
+                    runSpacing: 7,
+                    children: <Widget>[
+                      for (final e in CampusData.roomEquipment)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(color: pm.surf2, borderRadius: BorderRadius.circular(999)),
+                          child: Text(e, style: PmText.sans(12.5, weight: FontWeight.w500, color: pm.ink)),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  PmCard(
+                    padding: const EdgeInsets.all(15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const PmSectionLabel('Prochaines occupations', size: 9.5, ls: 0.14, bottom: 12),
+                        for (var i = 0; i < CampusData.todaySchedule.length; i++) ...<Widget>[
+                          if (i > 0) const SizedBox(height: 11),
+                          OccupationRow(course: CampusData.todaySchedule[i]),
+                        ],
+                      ],
                     ),
-                    clipBehavior: Clip.antiAlias,
-                    child: InkWell(
-                      onTap: () => context.read<AppState>().toggleFavorite(code),
-                      child: SizedBox(
-                        width: 52,
-                        height: 52,
-                        child: Center(child: DiamondGlyph(color: pm.ochre, size: 14, filled: fav)),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(22, 0, 22, pad.bottom + 12),
+              child: Row(
+                children: <Widget>[
+                  Semantics(
+                    button: true,
+                    label: fav ? 'Retirer des favoris' : 'Ajouter aux favoris',
+                    child: Material(
+                      color: pm.surf,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(color: pm.line),
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      child: InkWell(
+                        onTap: () => context.read<AppState>().toggleFavorite(code),
+                        child: SizedBox(
+                          width: 52,
+                          height: 52,
+                          child: Center(child: DiamondGlyph(color: pm.ochre, size: 14, filled: fav)),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: PmButton(
-                    label: "M'y conduire",
-                    radius: 15,
-                    onTap: () => PmNav.openRoute(context, 0),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: PmButton(
+                      label: "M'y conduire",
+                      radius: 15,
+                      onTap: () => PmNav.openRoute(context, 0),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

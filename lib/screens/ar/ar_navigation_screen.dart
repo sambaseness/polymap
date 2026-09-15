@@ -1,7 +1,15 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
+import '../../ar/ar_path.dart';
+import '../../ar/ar_pose.dart';
+import '../../ar/ar_scene.dart';
+import '../../data/models.dart';
 import '../../navigation.dart';
+import '../../state/app_state.dart';
 import '../../theme/pm_colors.dart';
 import '../../theme/pm_text.dart';
 import '../../widgets/camera_backdrop.dart';
@@ -11,10 +19,13 @@ import '../arrival_screen.dart';
 import 'ar_floor_screen.dart';
 import 'ar_widgets.dart';
 
-/// 16 — AR : navigation. Floating arrow, distance, door labels, minimap.
+/// 16 — AR : navigation.
 ///
-/// The arrow is screen-anchored (floats at a fixed spot) until an anchoring
-/// engine is chosen; door labels are positioned by hand for the same reason.
+/// The route ahead is laid on the ground as a chain of 3D arrows drawn in
+/// perspective from the phone's point of view ([ArScene]); the compass and
+/// tilt sensors orient the view, drag works everywhere. Door labels are
+/// anchored in the same metric frame. Position along the route is still the
+/// demo position (see docs/AR_APPROACH.md for live positioning).
 class ArNavigationScreen extends StatefulWidget {
   const ArNavigationScreen({super.key});
 
@@ -22,15 +33,25 @@ class ArNavigationScreen extends StatefulWidget {
   State<ArNavigationScreen> createState() => _ArNavigationScreenState();
 }
 
-class _ArNavigationScreenState extends State<ArNavigationScreen> with SingleTickerProviderStateMixin {
-  late final AnimationController _float = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 2600),
-  )..repeat(reverse: true);
+class _ArNavigationScreenState extends State<ArNavigationScreen> {
+  late final ArPoseController _pose;
+  late ArPath _path;
+  late List<ArLabel> _labels;
+  late ComputedRoute _route;
+
+  @override
+  void initState() {
+    super.initState();
+    _route = context.read<AppState>().computedRoute;
+    _path = ArPath.fromRoute(_route);
+    _labels = ArLabel.along(_path, _route.route.arLabels);
+    // Without sensors, start looking down the path.
+    _pose = ArPoseController(initial: ArPose(heading: _path.initialBearing, pitch: -12));
+  }
 
   @override
   void dispose() {
-    _float.dispose();
+    _pose.dispose();
     super.dispose();
   }
 
@@ -39,7 +60,12 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> with SingleTick
   @override
   Widget build(BuildContext context) {
     final pad = MediaQuery.paddingOf(context);
-    final h = MediaQuery.sizeOf(context).height;
+    final size = MediaQuery.sizeOf(context);
+    final wide = size.width >= 720;
+    final guidance = _path.guidance();
+    final floor = _route.route.floorChange;
+    final remaining = math.max(1, _route.minutes - 1);
+    final metersLeft = (_route.distM * 0.75 / 5).round() * 5;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
@@ -48,106 +74,34 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> with SingleTick
         body: CameraBackdrop(
           child: Stack(
             children: <Widget>[
-              // Floating arrow — `pm-float` : translateY 0 → -14 px.
-              Positioned(
-                left: 0,
-                right: 0,
-                top: h * 0.34,
-                child: AnimatedBuilder(
-                  animation: _float,
-                  builder: (_, child) => Transform.translate(
-                    offset: Offset(0, -14 * Curves.easeInOut.transform(_float.value)),
-                    child: child,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      const SizedBox(
-                        width: 96,
-                        height: 96,
-                        child: Center(
-                          child: NavArrow(color: PmFixed.brandBlue, size: 58, thickness: 16, radius: 6, glow: true),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Container(
-                        width: 78,
-                        height: 12,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(999),
-                          gradient: RadialGradient(
-                            colors: <Color>[PmFixed.brandBlue.withValues(alpha: .45), Colors.transparent],
-                            stops: const <double>[0, 0.7],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              Positioned.fill(child: ArScene(path: _path, pose: _pose, labels: _labels)),
               Positioned(
                 left: 20,
                 top: pad.top + 22,
-                child: const ArNextTurnCard(
-                  distance: '18 m',
-                  direction: 'à droite',
-                  eta: 'Arrivée dans 4 min · 210 m restants',
+                child: ArNextTurnCard(
+                  distance: guidance.distanceLabel,
+                  direction: guidance.turn.label,
+                  eta: 'Arrivée dans $remaining min · $metersLeft m restants',
                 ),
               ),
               Positioned(right: 20, top: pad.top + 22, child: ArExitButton(onTap: _exit)),
-              Positioned(
-                left: 26,
-                top: h * 0.34 + 20,
-                child: ArDoorLabel(text: 'C-104 · Bureau', color: PmFixed.brandBlue.withValues(alpha: .86)),
-              ),
-              Positioned(
-                right: 34,
-                top: h * 0.34 + 92,
-                child: ArDoorLabel(
-                  text: 'C-107 · TD',
-                  color: PmFixed.brandBrown.withValues(alpha: .88),
-                  dot: PmFixed.ochreLight,
-                ),
-              ),
-              Positioned(
-                left: 20,
-                right: 20,
-                top: h * 0.52,
-                child: Semantics(
-                  button: true,
-                  child: Material(
-                    color: PmFixed.brandOchre.withValues(alpha: .94),
-                    borderRadius: BorderRadius.circular(15),
-                    clipBehavior: Clip.antiAlias,
-                    child: InkWell(
-                      onTap: () => PmNav.push<void>(context, const ArFloorScreen()),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 13, 15, 13),
-                        child: Row(
-                          children: <Widget>[
-                            const StairsGlyph(color: PmFixed.onOchre),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text('Montez au 1er étage',
-                                      style: PmText.sans(14, weight: FontWeight.w700, color: PmFixed.onOchre)),
-                                  Text('Escalier B, à 18 m — puis 2e porte à gauche',
-                                      style: PmText.sans(12.5, color: PmFixed.onOchre.withValues(alpha: .8))),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+              Positioned(left: 20, bottom: pad.bottom + 98, child: _SensorChip(pose: _pose)),
+              if (floor != null)
+                Positioned(
+                  left: 20,
+                  right: wide ? null : 20,
+                  width: wide ? 400 : null,
+                  top: size.height * 0.60,
+                  child: _FloorBanner(
+                    floor: floor,
+                    onTap: () => PmNav.push<void>(context, ArFloorScreen(floor: floor)),
                   ),
                 ),
-              ),
-              Positioned(right: 20, bottom: pad.bottom + 98, child: const _Minimap()),
+              Positioned(right: 20, bottom: pad.bottom + 98, child: _Minimap(path: _path)),
               Positioned(
                 left: 20,
-                right: 20,
+                right: wide ? null : 20,
+                width: wide ? 400 : null,
                 bottom: pad.bottom + 12,
                 child: Row(
                   children: <Widget>[
@@ -155,7 +109,7 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> with SingleTick
                       child: PmButton(
                         label: 'Je suis arrivé',
                         variant: PmButtonVariant.brand,
-                        onTap: () => PmNav.push<void>(context, const ArrivalScreen()),
+                        onTap: () => PmNav.pushInShell(context, const ArrivalScreen()),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -181,9 +135,95 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> with SingleTick
   }
 }
 
-/// 108 px minimap — dark, current floor, remaining path.
+/// Shows whether the compass drives the view; offers permission on iOS web,
+/// and a « recentrer » reset after dragging.
+class _SensorChip extends StatelessWidget {
+  const _SensorChip({required this.pose});
+  final ArPoseController pose;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: pose,
+      builder: (context, _) {
+        final String text;
+        final VoidCallback? onTap;
+        if (pose.needsPermission) {
+          text = 'Activer la boussole';
+          onTap = pose.requestPermission;
+        } else if (pose.sensorsActive) {
+          text = 'Boussole · ${pose.pose.heading.round()}°';
+          onTap = pose.resetDrag;
+        } else {
+          text = 'Glissez pour regarder';
+          onTap = pose.resetDrag;
+        }
+        return ArGlass(
+          radius: 12,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          onTap: onTap,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                width: 7,
+                height: 7,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: pose.sensorsActive ? const Color(0xFFA9C9A1) : PmFixed.brandOchre,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(text, style: PmText.mono(10.5, color: PmFixed.white.withValues(alpha: .85), ls: 0.04)),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _FloorBanner extends StatelessWidget {
+  const _FloorBanner({required this.floor, required this.onTap});
+  final FloorChange floor;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Semantics(
+        button: true,
+        child: Material(
+          color: PmFixed.brandOchre.withValues(alpha: .94),
+          borderRadius: BorderRadius.circular(15),
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: onTap,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(15, 13, 15, 13),
+              child: Row(
+                children: <Widget>[
+                  const StairsGlyph(color: PmFixed.onOchre),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(floor.title, style: PmText.sans(14, weight: FontWeight.w700, color: PmFixed.onOchre)),
+                        Text(floor.detail, style: PmText.sans(12.5, color: PmFixed.onOchre.withValues(alpha: .8))),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+}
+
+/// 108 px minimap — dark, current floor, the remaining path from above.
 class _Minimap extends StatelessWidget {
-  const _Minimap();
+  const _Minimap({required this.path});
+  final ArPath path;
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +239,7 @@ class _Minimap extends StatelessWidget {
       ),
       child: Stack(
         children: <Widget>[
-          Positioned.fill(child: CustomPaint(painter: _MinimapPainter())),
+          Positioned.fill(child: CustomPaint(painter: _MinimapPainter(path))),
           Positioned(
             left: 8,
             bottom: 6,
@@ -212,34 +252,45 @@ class _Minimap extends StatelessWidget {
 }
 
 class _MinimapPainter extends CustomPainter {
+  _MinimapPainter(this.path);
+  final ArPath path;
+
   @override
   void paint(Canvas canvas, Size s) {
-    Offset p(double x, double y) => Offset(x / 100 * s.width, y / 100 * s.height);
     canvas.drawRect(Rect.fromLTWH(0, s.height * .4, s.width, 12), Paint()..color = PmFixed.white.withValues(alpha: .07));
     final b = Paint()..color = PmFixed.arMinimapBldg;
     for (final r in const <Rect>[Rect.fromLTWH(14, 18, 26, 22), Rect.fromLTWH(56, 20, 30, 18), Rect.fromLTWH(20, 62, 34, 24)]) {
       canvas.drawRRect(
-        RRect.fromRectAndRadius(Rect.fromPoints(p(r.left, r.top), p(r.right, r.bottom)), const Radius.circular(3)),
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(r.left / 100 * s.width, r.top / 100 * s.height, r.width / 100 * s.width, r.height / 100 * s.height),
+          const Radius.circular(3),
+        ),
         b,
       );
     }
-    final path = Path()..moveTo(p(30, 86).dx, p(30, 86).dy);
-    for (final o in const <Offset>[Offset(34, 58), Offset(62, 46), Offset(68, 22)]) {
-      path.lineTo(p(o.dx, o.dy).dx, p(o.dx, o.dy).dy);
+    // Remaining path, north up, walker near the bottom, ~1.4 px per metre.
+    final origin = Offset(s.width * .3, s.height * .84);
+    const k = 1.4;
+    final p = Path()..moveTo(origin.dx, origin.dy);
+    for (final w in path.points.skip(1)) {
+      p.lineTo(origin.dx + w.dx * k, origin.dy - w.dy * k);
     }
+    canvas.save();
+    canvas.clipRect(Offset.zero & s);
     canvas.drawPath(
-      path,
+      p,
       Paint()
         ..color = PmFixed.arMinimapBlue
         ..style = PaintingStyle.stroke
         ..strokeWidth = 3
-        ..strokeJoin = StrokeJoin.round,
+        ..strokeJoin = StrokeJoin.round
+        ..strokeCap = StrokeCap.round,
     );
-    final here = p(26, 80) + const Offset(4.5, 4.5);
-    canvas.drawCircle(here, 4.5, Paint()..color = PmFixed.arMinimapBlue);
-    canvas.drawCircle(here, 3.5, Paint()..color = PmFixed.arMinimapBg..style = PaintingStyle.stroke..strokeWidth = 2);
+    canvas.restore();
+    canvas.drawCircle(origin, 4.5, Paint()..color = PmFixed.arMinimapBlue);
+    canvas.drawCircle(origin, 3.5, Paint()..color = PmFixed.arMinimapBg..style = PaintingStyle.stroke..strokeWidth = 2);
   }
 
   @override
-  bool shouldRepaint(_MinimapPainter oldDelegate) => false;
+  bool shouldRepaint(_MinimapPainter old) => old.path != path;
 }

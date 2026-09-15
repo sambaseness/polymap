@@ -48,6 +48,48 @@ enum RouteMode {
   final int distDelta;
 }
 
+/// A door / landmark label shown in AR, placed [along] metres down the path
+/// and [side] metres to the right of it (negative = left).
+class RouteLabel {
+  const RouteLabel(this.text, this.tint, {required this.along, required this.side});
+  final String text;
+  final PmTint tint;
+  final double along;
+  final double side;
+}
+
+/// A level change on the route (stairs / ramp), shown as the ochre banner.
+class FloorChange {
+  const FloorChange({
+    required this.title,
+    required this.detail,
+    required this.stairs,
+    required this.fromTo,
+    required this.steps,
+    required this.then,
+    required this.thenDetail,
+  });
+
+  /// « Montez au 1er étage »
+  final String title;
+
+  /// « Escalier B, à 18 m — puis 2e porte à gauche »
+  final String detail;
+
+  /// « Escalier B »
+  final String stairs;
+
+  /// « RDC → 1er étage »
+  final String fromTo;
+  final int steps;
+
+  /// « Ensuite : 2e porte à gauche »
+  final String then;
+
+  /// « Salle C-107 · à 34 m après l'escalier »
+  final String thenDetail;
+}
+
 class CampusRoute {
   const CampusRoute({
     required this.from,
@@ -59,6 +101,8 @@ class CampusRoute {
     required this.alt,
     required this.short,
     required this.steps,
+    this.arLabels = const <RouteLabel>[],
+    this.floorChange,
   });
 
   final String from;
@@ -66,6 +110,12 @@ class CampusRoute {
   final String destShort;
   final int minutes;
   final int distM;
+
+  /// Labels rendered in the AR view along the remaining path.
+  final List<RouteLabel> arLabels;
+
+  /// Level change ahead, if any.
+  final FloorChange? floorChange;
 
   /// Polyline in map percentages for each mode.
   final List<Offset> pts;

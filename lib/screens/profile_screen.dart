@@ -5,6 +5,7 @@ import '../data/models.dart';
 import '../navigation.dart';
 import '../state/app_state.dart';
 import '../theme/pm_colors.dart';
+import '../theme/pm_layout.dart';
 import '../theme/pm_text.dart';
 import '../widgets/glyphs.dart';
 import '../widgets/pm_primitives.dart';
@@ -33,80 +34,82 @@ class ProfileScreen extends StatelessWidget {
       ('Aide et contact ESP', '', PmTint.blue, () => PmNav.toHome(context)),
     ];
 
-    return ListView(
-      padding: EdgeInsets.fromLTRB(22, pad.top + 24, 22, 24),
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Container(
-              width: 62,
-              height: 62,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(color: pm.brown, borderRadius: BorderRadius.circular(22)),
-              child: Text(initials, style: PmText.grotesk(22, color: PmFixed.white)),
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: PmText.grotesk(22, color: pm.ink)),
-                  Text(
-                    state.isGuest ? 'Mode visiteur · carte et itinéraires' : 'DUT1 Télécoms & Réseaux · 2025-2026',
-                    style: PmText.sans(13, color: pm.ink2),
-                  ),
-                ],
+    return PmPage(
+      child: ListView(
+        padding: EdgeInsets.fromLTRB(22, pad.top + 24, 22, 24),
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Container(
+                width: 62,
+                height: 62,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: pm.brown, borderRadius: BorderRadius.circular(22)),
+                child: Text(initials, style: PmText.grotesk(22, color: PmFixed.white)),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 22),
-        Row(
-          children: <Widget>[
-            for (final (i, (v, k)) in const <(String, String)>[('38', 'Trajets ce mois'), ('12', 'Lieux favoris'), ('4', 'Signalements')].indexed) ...<Widget>[
-              if (i > 0) const SizedBox(width: 10),
+              const SizedBox(width: 15),
               Expanded(
-                child: PmTile(
-                  padding: const EdgeInsets.all(13),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(v, style: PmText.grotesk(20, weight: FontWeight.w700, color: pm.blue)),
-                      const SizedBox(height: 3),
-                      Text(k, style: PmText.sans(11, color: pm.ink2)),
-                    ],
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: PmText.grotesk(22, color: pm.ink)),
+                    Text(
+                      state.isGuest ? 'Mode visiteur · carte et itinéraires' : 'DUT1 Télécoms & Réseaux · 2025-2026',
+                      style: PmText.sans(13, color: pm.ink2),
+                    ),
+                  ],
                 ),
               ),
             ],
-          ],
-        ),
-        const SizedBox(height: 18),
-        for (final (label, value, tint, go) in menu)
-          InkWell(
-            onTap: go,
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: pm.line))),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(color: tintColor(pm, tint), borderRadius: BorderRadius.circular(9)),
+          ),
+          const SizedBox(height: 22),
+          Row(
+            children: <Widget>[
+              for (final (i, (v, k)) in const <(String, String)>[('38', 'Trajets ce mois'), ('12', 'Lieux favoris'), ('4', 'Signalements')].indexed) ...<Widget>[
+                if (i > 0) const SizedBox(width: 10),
+                Expanded(
+                  child: PmTile(
+                    padding: const EdgeInsets.all(13),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(v, style: PmText.grotesk(20, weight: FontWeight.w700, color: pm.blue)),
+                        const SizedBox(height: 3),
+                        Text(k, style: PmText.sans(11, color: pm.ink2)),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 13),
-                  Expanded(child: Text(label, style: PmText.sans(14.5, weight: FontWeight.w500, color: pm.ink))),
-                  if (value.isNotEmpty) ...<Widget>[
-                    Text(value, style: PmText.mono(11.5, color: pm.ink2)),
+                ),
+              ],
+            ],
+          ),
+          const SizedBox(height: 18),
+          for (final (label, value, tint, go) in menu)
+            InkWell(
+              onTap: go,
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: pm.line))),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(color: tintColor(pm, tint), borderRadius: BorderRadius.circular(9)),
+                    ),
                     const SizedBox(width: 13),
+                    Expanded(child: Text(label, style: PmText.sans(14.5, weight: FontWeight.w500, color: pm.ink))),
+                    if (value.isNotEmpty) ...<Widget>[
+                      Text(value, style: PmText.mono(11.5, color: pm.ink2)),
+                      const SizedBox(width: 13),
+                    ],
+                    Chevron(color: pm.ink2, size: 7),
                   ],
-                  Chevron(color: pm.ink2, size: 7),
-                ],
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 

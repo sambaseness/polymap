@@ -52,6 +52,7 @@ class _ArCalibrationScreenState extends State<ArCalibrationScreen> with SingleTi
   @override
   Widget build(BuildContext context) {
     final pad = MediaQuery.paddingOf(context);
+    final wide = MediaQuery.sizeOf(context).width >= 720;
     final pct = (_progress * 100).round();
     final segments = (_progress * 3).ceil().clamp(0, 3);
 
@@ -116,8 +117,9 @@ class _ArCalibrationScreenState extends State<ArCalibrationScreen> with SingleTi
                 child: ArExitButton(onTap: () => Navigator.of(context).maybePop()),
               ),
               Positioned(
-                left: 24,
-                right: 24,
+                left: wide ? (MediaQuery.sizeOf(context).width - 440) / 2 : 24,
+                right: wide ? null : 24,
+                width: wide ? 440 : null,
                 bottom: pad.bottom + 22,
                 child: Column(
                   children: <Widget>[

@@ -6,6 +6,7 @@ import '../data/campus_data.dart';
 import '../data/models.dart';
 import '../navigation.dart';
 import '../theme/pm_colors.dart';
+import '../theme/pm_layout.dart';
 import '../theme/pm_text.dart';
 import '../widgets/glyphs.dart';
 import '../widgets/pm_button.dart';
@@ -45,51 +46,53 @@ class _SearchScreenState extends State<SearchScreen> {
     final none = query.isNotEmpty && results.isEmpty;
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, pad.top + 8, 16, 14),
-            child: Row(
-              children: <Widget>[
-                PmBackButton(size: 34),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Container(
-                    height: 44,
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    decoration: BoxDecoration(
-                      color: pm.surf,
-                      borderRadius: BorderRadius.circular(13),
-                      border: Border.all(color: none ? pm.brown : pm.blue, width: 1.5),
-                    ),
-                    child: TextField(
-                      controller: _ctrl,
-                      autofocus: true,
-                      textInputAction: TextInputAction.search,
-                      onChanged: (_) => setState(() {}),
-                      style: PmText.sans(14.5, color: pm.ink),
-                      decoration: InputDecoration(
-                        hintText: 'Salle, bâtiment, département…',
-                        hintStyle: PmText.sans(14.5, color: pm.ink2),
+      body: PmPage(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(16, pad.top + 8, 16, 14),
+              child: Row(
+                children: <Widget>[
+                  PmBackButton(size: 34),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Container(
+                      height: 44,
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      decoration: BoxDecoration(
+                        color: pm.surf,
+                        borderRadius: BorderRadius.circular(13),
+                        border: Border.all(color: none ? pm.brown : pm.blue, width: 1.5),
+                      ),
+                      child: TextField(
+                        controller: _ctrl,
+                        autofocus: true,
+                        textInputAction: TextInputAction.search,
+                        onChanged: (_) => setState(() {}),
+                        style: PmText.sans(14.5, color: pm.ink),
+                        decoration: InputDecoration(
+                          hintText: 'Salle, bâtiment, département…',
+                          hintStyle: PmText.sans(14.5, color: pm.ink2),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: switch ((query.isEmpty, none)) {
-              (true, _) => _Recents(
-                  recents: _recents,
-                  onRemove: (p) => setState(() => _recents = _recents.where((r) => r != p).toList()),
-                ),
-              (false, false) => _Results(results: results),
-              (false, true) => _NoResults(query: query),
-            },
-          ),
-        ],
+            Expanded(
+              child: switch ((query.isEmpty, none)) {
+                (true, _) => _Recents(
+                    recents: _recents,
+                    onRemove: (p) => setState(() => _recents = _recents.where((r) => r != p).toList()),
+                  ),
+                (false, false) => _Results(results: results),
+                (false, true) => _NoResults(query: query),
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

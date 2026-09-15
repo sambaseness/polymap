@@ -14,6 +14,8 @@ dependencies:
   # (ARCore / ARKit / marker-based) is deliberately NOT wired yet — see
   # docs/AR_APPROACH.md for the decision to be made.
   camera: ^0.11.0
+  sensors_plus: ^7.1.0
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:

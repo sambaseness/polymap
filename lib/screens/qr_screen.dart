@@ -7,6 +7,7 @@ import '../theme/pm_text.dart';
 import '../widgets/camera_backdrop.dart';
 import '../widgets/pm_button.dart';
 import '../widgets/pm_primitives.dart';
+import 'building_screen.dart';
 
 /// 04 — Localisation par QR. Indoor re-localisation where GPS fails.
 ///
@@ -18,6 +19,8 @@ class QrScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pad = MediaQuery.paddingOf(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final wide = width >= 720;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.light,
       child: Scaffold(
@@ -50,8 +53,9 @@ class QrScreen extends StatelessWidget {
                 ),
               ),
               Positioned(
-                left: 24,
-                right: 24,
+                left: wide ? (width - 440) / 2 : 24,
+                right: wide ? null : 24,
+                width: wide ? 440 : null,
                 bottom: pad.bottom + 20,
                 child: Column(
                   children: <Widget>[
@@ -67,7 +71,7 @@ class QrScreen extends StatelessWidget {
                     PmButton(
                       label: 'Saisir le code manuellement',
                       variant: PmButtonVariant.glass,
-                      onTap: () => PmNav.openBuilding(context),
+                      onTap: () => PmNav.pushInShell(context, const BuildingScreen()),
                     ),
                   ],
                 ),

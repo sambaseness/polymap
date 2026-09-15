@@ -6,6 +6,7 @@ import '../data/models.dart';
 import '../navigation.dart';
 import '../state/app_state.dart';
 import '../theme/pm_colors.dart';
+import '../theme/pm_layout.dart';
 import '../theme/pm_text.dart';
 import '../widgets/dashed_border.dart';
 import '../widgets/pm_button.dart';
@@ -25,57 +26,59 @@ class BuildingScreen extends StatelessWidget {
     final rooms = CampusData.pavillonCFloors[floor];
 
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          SizedBox(height: pad.top + 8),
-          const PmScreenHeader(
-            title: 'Pavillon C',
-            subtitle: 'Résidence · 3 niveaux · 48 chambres',
-            titleSize: 21,
-            padding: EdgeInsets.fromLTRB(18, 8, 18, 12),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(18, 6, 18, 14),
-            child: Row(
-              children: <Widget>[
-                for (var i = 0; i < CampusData.floorLabels.length; i++) ...<Widget>[
-                  if (i > 0) const SizedBox(width: 6),
-                  _FloorPill(
-                    label: CampusData.floorLabels[i],
-                    selected: floor == i,
-                    onTap: () => context.read<AppState>().floor = i,
-                  ),
+      body: PmPage(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            SizedBox(height: pad.top + 8),
+            const PmScreenHeader(
+              title: 'Pavillon C',
+              subtitle: 'Résidence · 3 niveaux · 48 chambres',
+              titleSize: 21,
+              padding: EdgeInsets.fromLTRB(18, 8, 18, 12),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 6, 18, 14),
+              child: Row(
+                children: <Widget>[
+                  for (var i = 0; i < CampusData.floorLabels.length; i++) ...<Widget>[
+                    if (i > 0) const SizedBox(width: 6),
+                    _FloorPill(
+                      label: CampusData.floorLabels[i],
+                      selected: floor == i,
+                      onTap: () => context.read<AppState>().floor = i,
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            child: _FloorPlan(rooms: rooms),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
-            child: Wrap(
-              spacing: 16,
-              runSpacing: 6,
-              children: <Widget>[
-                _Legend(color: pm.blue, label: 'Salle de cours'),
-                _Legend(color: pm.brown, label: 'Bureau'),
-                _Legend(color: pm.ochre, label: 'Service'),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18),
+              child: _FloorPlan(rooms: rooms),
             ),
-          ),
-          const Spacer(),
-          Padding(
-            padding: EdgeInsets.fromLTRB(18, 0, 18, pad.bottom + 12),
-            child: PmButton(
-              label: 'Itinéraire depuis ici',
-              radius: 15,
-              onTap: () => PmNav.openRoute(context, 0),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+              child: Wrap(
+                spacing: 16,
+                runSpacing: 6,
+                children: <Widget>[
+                  _Legend(color: pm.blue, label: 'Salle de cours'),
+                  _Legend(color: pm.brown, label: 'Bureau'),
+                  _Legend(color: pm.ochre, label: 'Service'),
+                ],
+              ),
             ),
-          ),
-        ],
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.fromLTRB(18, 0, 18, pad.bottom + 12),
+              child: PmButton(
+                label: 'Itinéraire depuis ici',
+                radius: 15,
+                onTap: () => PmNav.openRoute(context, 0),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

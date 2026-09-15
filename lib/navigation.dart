@@ -9,13 +9,19 @@ import 'screens/room_screen.dart';
 import 'screens/route_screen.dart';
 import 'state/app_state.dart';
 
-/// Thin navigation helpers over Navigator 1.0.
+/// Navigation helpers.
 ///
-/// The stack is: Splash → (Onboarding → Auth) → [HomeShell] → pushed screens.
-/// [HomeShell] is registered under [homeRouteName] so « Terminer » / « Envoyer »
-/// can unwind to it from anywhere.
+/// Two navigators:
+/// * the **root** one holds the launch flow (Splash → Onboarding → Auth), then
+///   [HomeShell] under [homeRouteName], and full-window screens (QR, AR);
+/// * the **nested** one inside [HomeShell] holds everything else, so the
+///   navigation rail stays visible on wide screens.
+///
+/// [push] goes to the nearest navigator — nested when called from shell
+/// content, root when called from the launch flow or an AR screen.
 abstract final class PmNav {
   static const String homeRouteName = '/home';
+  static const String shellRootName = '/shell';
 
   static Future<T?> push<T>(BuildContext context, Widget page) =>
       Navigator.of(context).push<T>(_route<T>(page));
@@ -23,25 +29,41 @@ abstract final class PmNav {
   static Future<T?> replace<T>(BuildContext context, Widget page) =>
       Navigator.of(context).pushReplacement<T, void>(_route<T>(page));
 
+  /// Full-window push (camera / AR screens), above the shell and its rail.
+  static Future<T?> pushFullscreen<T>(BuildContext context, Widget page) =>
+      Navigator.of(context, rootNavigator: true).push<T>(_route<T>(page));
+
+  /// Push a page into the shell's content area from anywhere (e.g. from a
+  /// full-window AR screen), dropping any full-window screens above the shell.
+  static void pushInShell(BuildContext context, Widget page) {
+    final root = Navigator.of(context, rootNavigator: true);
+    root.popUntil((r) => r.settings.name == homeRouteName || r.isFirst);
+    HomeShell.navKey.currentState?.push<void>(_route<void>(page));
+  }
+
   /// Enter the tab shell and drop the launch screens.
   static void enterHome(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil<void>(
+    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil<void>(
       _route<void>(const HomeShell(), name: homeRouteName),
       (_) => false,
     );
   }
 
-  /// Unwind to the shell (creating it if we are still in the launch flow)
-  /// and select a tab.
+  /// Unwind everything to the shell root (creating the shell if we are still
+  /// in the launch flow) and select a tab (0 carte, 1 favoris, 2 profil).
   static void toHome(BuildContext context, {int tab = 0}) {
     context.read<AppState>().tab = tab;
-    final nav = Navigator.of(context);
+    final root = Navigator.of(context, rootNavigator: true);
     var found = false;
-    nav.popUntil((r) {
+    root.popUntil((r) {
       if (r.settings.name == homeRouteName) found = true;
       return found || r.isFirst;
     });
-    if (!found) enterHome(context);
+    if (!found) {
+      enterHome(context);
+      return;
+    }
+    HomeShell.navKey.currentState?.popUntil((r) => r.isFirst);
   }
 
   static void openRoute(BuildContext context, int index) {
