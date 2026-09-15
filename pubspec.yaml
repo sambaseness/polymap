@@ -1,0 +1,41 @@
+name: polymap
+description: "PolyMap — navigation du campus de l'École Supérieure Polytechnique de Dakar."
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.5.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.2
+  # Live camera backdrop for the AR screens. The spatial-anchoring engine
+  # (ARCore / ARKit / marker-based) is deliberately NOT wired yet — see
+  # docs/AR_APPROACH.md for the decision to be made.
+  camera: ^0.11.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Section 03 — Typographie. Bundled so the app renders identically offline.
+  # Space Grotesk and IBM Plex Sans are variable fonts: weight is driven by
+  # FontVariation('wght', …) in lib/theme/pm_text.dart.
+  fonts:
+    - family: Space Grotesk
+      fonts:
+        - asset: assets/fonts/SpaceGrotesk-Variable.ttf
+    - family: IBM Plex Sans
+      fonts:
+        - asset: assets/fonts/IBMPlexSans-Variable.ttf
+    - family: IBM Plex Mono
+      fonts:
+        - asset: assets/fonts/IBMPlexMono-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/IBMPlexMono-Medium.ttf
+          weight: 500
