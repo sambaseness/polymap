@@ -58,12 +58,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const PmLogo(
-                    size: 104,
-                    body: PmFixed.brandBlue,
-                    pencil: PmFixed.brandBrown,
-                    tip: PmFixed.brandOchre,
-                  ),
+                  const PmLogo(size: 112, color: PmFixed.white),
                   const SizedBox(height: 26),
                   Text(
                     'PolyMap',

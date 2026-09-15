@@ -21,9 +21,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/logo.png
 
   # Section 03 — Typographie. Bundled so the app renders identically offline.
   # Space Grotesk and IBM Plex Sans are variable fonts: weight is driven by
@@ -41,3 +45,20 @@ flutter:
           weight: 400
         - asset: assets/fonts/IBMPlexMono-Medium.ttf
           weight: 500
+
+# App icons — `dart run flutter_launcher_icons` regenerates every platform
+# from the masters in assets/icons (built from assets/images/logo_src.png).
+flutter_launcher_icons:
+  image_path: "assets/icons/icon.png"
+  android: true
+  adaptive_icon_background: "#F5F1EA"
+  adaptive_icon_foreground: "assets/icons/icon_foreground.png"
+  adaptive_icon_monochrome: "assets/icons/icon_monochrome.png"
+  ios: true
+  remove_alpha_ios: true
+  background_color_ios: "#F5F1EA"
+  web:
+    generate: true
+    image_path: "assets/icons/icon.png"
+    background_color: "#F5F1EA"
+    theme_color: "#1479C9"

@@ -109,7 +109,7 @@ class _Rail extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          const Padding(padding: EdgeInsets.only(right: 4), child: PmLogo(size: 36)),
+          const PmLogo(size: 36),
           const SizedBox(height: 26),
           for (var i = 0; i < PmBottomNav.labels.length; i++) ...<Widget>[
             _RailItem(index: i, on: active == i, onTap: () => HomeShell.selectTab(context, i)),
