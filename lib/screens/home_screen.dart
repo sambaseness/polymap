@@ -6,7 +6,7 @@ import '../theme/pm_colors.dart';
 import '../theme/pm_layout.dart';
 import '../theme/pm_text.dart';
 import '../theme/pm_tokens.dart';
-import '../widgets/campus_map.dart';
+import '../widgets/real_campus_map.dart';
 import '../widgets/dashed_border.dart';
 import '../widgets/glyphs.dart';
 import '../widgets/pm_cards.dart';
@@ -26,7 +26,18 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final top = MediaQuery.paddingOf(context).top;
     return PmMapLayout(
-      map: const CampusMap(userPosition: CampusData.userPosition),
+      map: RealCampusMap(
+        showUserPosition: true,
+        onBuildingTap: (building) {
+          // Find the matching building in CampusData and navigate
+          final index = CampusData.buildings.indexWhere(
+            (b) => b.name == building.name,
+          );
+          if (index >= 0) {
+            PmNav.openBuilding(context);
+          }
+        },
+      ),
       compact: (map) => Stack(
         fit: StackFit.expand,
         children: <Widget>[

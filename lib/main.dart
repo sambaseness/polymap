@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'app.dart';
 import 'state/app_state.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -14,9 +14,14 @@ void main() {
     ),
   );
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  // Initialize app state with persistence
+  final appState = AppState();
+  await appState.init();
+
   runApp(
     ChangeNotifierProvider<AppState>(
-      create: (_) => AppState(),
+      create: (_) => appState,
       child: const PolyMapApp(),
     ),
   );

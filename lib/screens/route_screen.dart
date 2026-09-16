@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../data/models.dart';
+import '../data/campus_gps.dart';
 import '../navigation.dart';
 import '../state/app_state.dart';
 import '../theme/pm_colors.dart';
 import '../theme/pm_layout.dart';
 import '../theme/pm_text.dart';
 import '../theme/pm_tokens.dart';
-import '../widgets/campus_map.dart';
+import '../widgets/real_campus_map.dart';
 import '../widgets/glyphs.dart';
 import '../widgets/pm_button.dart';
 import '../widgets/pm_cards.dart';
@@ -25,9 +26,20 @@ class RouteScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     final r = state.computedRoute;
 
+    // Get route GPS points based on mode
+    final routePoints = switch (state.mode) {
+      RouteMode.walk => CampusGps.route1Walk,
+      RouteMode.accessible => CampusGps.route1Accessible,
+      RouteMode.shortest => CampusGps.route1Shortest,
+    };
+
     return Scaffold(
       body: PmMapLayout(
-        map: CampusMap(roads: MapRoads.two, route: r),
+        map: RealCampusMap(
+          showUserPosition: false,
+          routePoints: routePoints,
+          routeColor: null, // Uses default blue
+        ),
         compact: (map) => Stack(
           fit: StackFit.expand,
           children: <Widget>[

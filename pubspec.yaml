@@ -16,6 +16,13 @@ dependencies:
   camera: ^0.11.0
   sensors_plus: ^7.1.0
   web: ^1.1.1
+  # Real map with OpenStreetMap tiles
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  # QR code scanning for indoor positioning
+  mobile_scanner: ^5.2.3
+  # Local persistence for user preferences
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:
