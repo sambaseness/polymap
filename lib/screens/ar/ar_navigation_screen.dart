@@ -2,12 +2,14 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 import '../../ar/ar_path.dart';
 import '../../ar/ar_pose.dart';
 import '../../ar/ar_scene.dart';
 import '../../data/models.dart';
+import '../../data/node_graph.dart';
 import '../../navigation.dart';
 import '../../state/app_state.dart';
 import '../../theme/pm_colors.dart';
@@ -24,8 +26,11 @@ import 'ar_widgets.dart';
 /// The route ahead is laid on the ground as a chain of 3D arrows drawn in
 /// perspective from the phone's point of view ([ArScene]); the compass and
 /// tilt sensors orient the view, drag works everywhere. Door labels are
-/// anchored in the same metric frame. Position along the route is still the
-/// demo position (see docs/AR_APPROACH.md for live positioning).
+/// anchored in the same metric frame.
+///
+/// Position is determined by QR code scans (AppState.currentNodeId →
+/// NodeGraph.findNode()), or falls back to the demo position when no
+/// QR has been scanned yet.
 class ArNavigationScreen extends StatefulWidget {
   const ArNavigationScreen({super.key});
 
@@ -33,11 +38,25 @@ class ArNavigationScreen extends StatefulWidget {
   State<ArNavigationScreen> createState() => _ArNavigationScreenState();
 }
 
+/// Scale factor: 1 LatLng degree ≈ 111km at equator.
+/// Campus is small enough that we can use a simple linear approximation.
+const double _kLatLngToOffsetScale = 100000.0;
+
+/// Convert a LatLng position to an Offset in metres relative to the
+/// campus center (approximate). Used as the AR scene origin.
+Offset latLngToOffset(LatLng latLng) {
+  return Offset(
+    (latLng.longitude - (-17.4467)) * _kLatLngToOffsetScale,
+    (latLng.latitude - 14.6904) * _kLatLngToOffsetScale,
+  );
+}
+
 class _ArNavigationScreenState extends State<ArNavigationScreen> {
   late final ArPoseController _pose;
   late ArPath _path;
   late List<ArLabel> _labels;
   late ComputedRoute _route;
+  late Offset _arOrigin = Offset.zero;
 
   @override
   void initState() {
@@ -47,6 +66,24 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> {
     _labels = ArLabel.along(_path, _route.route.arLabels);
     // Without sensors, start looking down the path.
     _pose = ArPoseController(initial: ArPose(heading: _path.initialBearing, pitch: -12));
+    // Resolve AR origin from QR scan position, or use demo position.
+    _arOrigin = _resolveArOrigin();
+  }
+
+  /// Resolve the AR origin from the current node position.
+  /// If a QR code has been scanned (currentNodeId is set), use the
+  /// node's position. Otherwise, fall back to the demo position.
+  Offset _resolveArOrigin() {
+    final appState = context.read<AppState>();
+    final nodeId = appState.currentNodeId;
+    if (nodeId != null) {
+      final node = NodeGraph.findNode(nodeId);
+      if (node != null) {
+        return latLngToOffset(node.position);
+      }
+    }
+    // Fallback: demo position (Pavillon C user position).
+    return Offset(32.5, 90);
   }
 
   @override
@@ -74,7 +111,7 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> {
         body: CameraBackdrop(
           child: Stack(
             children: <Widget>[
-              Positioned.fill(child: ArScene(path: _path, pose: _pose, labels: _labels)),
+              Positioned.fill(child: ArScene(path: _path, pose: _pose, labels: _labels, origin: _arOrigin)),
               Positioned(
                 left: 20,
                 top: pad.top + 22,

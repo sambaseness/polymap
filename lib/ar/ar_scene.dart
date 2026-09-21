@@ -26,6 +26,7 @@ class ArScene extends StatefulWidget {
     this.firstArrow = 3.5,
     this.eyeHeight = 1.5,
     this.verticalFov = 62,
+    this.origin = Offset.zero,
   });
 
   final ArPath path;
@@ -40,6 +41,10 @@ class ArScene extends StatefulWidget {
 
   /// Vertical field of view in degrees (rear phone camera ≈ 60–65°).
   final double verticalFov;
+
+  /// Origin of the AR coordinate system in metres (east, north).
+  /// Defaults to Offset.zero; set from QR scan node position.
+  final Offset origin;
 
   @override
   State<ArScene> createState() => _ArSceneState();
@@ -94,6 +99,7 @@ class _ArSceneState extends State<ArScene> with SingleTickerProviderStateMixin {
             pm: pm,
             eyeHeight: widget.eyeHeight,
             vfovDeg: widget.verticalFov,
+            origin: widget.origin,
           ),
           size: Size.infinite,
         ),
@@ -165,6 +171,7 @@ class _ScenePainter extends CustomPainter {
     required this.pm,
     required this.eyeHeight,
     required this.vfovDeg,
+    this.origin = Offset.zero,
   });
 
   final ArPose pose;
@@ -175,6 +182,10 @@ class _ScenePainter extends CustomPainter {
   final PmColors pm;
   final double eyeHeight;
   final double vfovDeg;
+
+  /// Origin of the AR coordinate system (east, north) in metres.
+  /// All world positions are offset by this value.
+  final Offset origin;
 
   // Arrow outline (top view, x right, z forward), metres. A thick chevron.
   static const List<Offset> _chevron = <Offset>[
@@ -213,8 +224,8 @@ class _ScenePainter extends CustomPainter {
     // Start under the first arrow rather than under the camera (which is
     // behind the near plane whenever the phone is level).
     final world = <Offset>[
-      if (arrows.isNotEmpty) arrows.first.pos else path.points.first,
-      ...path.points.skip(1),
+      if (arrows.isNotEmpty) arrows.first.pos + origin else path.points.first + origin,
+      ...path.points.skip(1).map((p) => p + origin),
     ];
     final pts = <Offset>[];
     for (final p in world) {
@@ -243,12 +254,12 @@ class _ScenePainter extends CustomPainter {
 
     // Local (x, z) → world (east, north).
     Offset world(Offset l) => Offset(
-          a.pos.dx + (l.dx * cb + l.dy * sb) * _arrowScale,
-          a.pos.dy + (-l.dx * sb + l.dy * cb) * _arrowScale,
+          a.pos.dx + origin.dx + (l.dx * cb + l.dy * sb) * _arrowScale,
+          a.pos.dy + origin.dy + (-l.dx * sb + l.dy * cb) * _arrowScale,
         );
 
     // Ground glow (soft ellipse) — the design's radial halo under the arrow.
-    final centre = cam.project(a.pos.dx, 0.0, a.pos.dy);
+    final centre = cam.project(a.pos.dx + origin.dx, 0.0, a.pos.dy + origin.dy);
     if (centre == null) return;
     final glowR = (cam.focal * 0.55 * _arrowScale / centre.depth).clamp(4.0, 90.0);
     canvas.drawOval(
@@ -317,7 +328,7 @@ class _ScenePainter extends CustomPainter {
   }
 
   void _paintLabel(Canvas canvas, _Camera cam, ArLabel l) {
-    final anchor = cam.project(l.pos.dx, l.height, l.pos.dy);
+    final anchor = cam.project(l.pos.dx + origin.dx, l.height, l.pos.dy + origin.dy);
     if (anchor == null) return;
     final scale = (cam.focal / anchor.depth / 60).clamp(0.55, 1.15);
     final tp = TextPainter(

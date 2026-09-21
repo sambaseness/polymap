@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:provider/provider.dart';
 
+import '../state/app_state.dart';
 import '../theme/pm_colors.dart';
 import '../theme/pm_text.dart';
+import '../widgets/camera_backdrop.dart';
+import '../widgets/pm_button.dart';
+import '../widgets/pm_primitives.dart';
+import 'building_screen.dart';
 
-/// QR Code scanner for indoor positioning.
+/// 04 — Localisation par QR. Indoor re-localisation where GPS fails.
 ///
 /// Scans QR codes placed at building entrances and key locations.
-/// Each QR code encodes a node ID that maps to a position in the node graph.
+/// Each QR code encodes a node ID (e.g. "polymap:node:C-RDC-ENTRANCE")
+/// that maps to a position in the node graph.
+///
+/// On confirm, the node position is written to AppState.currentNodeId
+/// so the AR navigation screen can use it as the AR scene origin.
 class QrScannerScreen extends StatefulWidget {
   const QrScannerScreen({super.key});
 
@@ -93,6 +103,8 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
         building: building,
         room: room,
         onConfirm: () {
+          // Write position to AppState so AR screen uses it as origin
+          context.read<AppState>().setCurrentPosition(nodeId);
           Navigator.of(context).pop();
           Navigator.of(context).pop(nodeId);
         },

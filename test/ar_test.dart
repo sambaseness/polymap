@@ -3,8 +3,62 @@ import 'package:polymap/ar/ar_path.dart';
 import 'package:polymap/ar/ar_pose.dart';
 import 'package:polymap/data/campus_data.dart';
 import 'package:polymap/data/models.dart';
+import 'package:polymap/data/node_graph.dart';
 
 void main() {
+  group('NodeGraph', () {
+    test('findNode returns the correct node for a valid ID', () {
+      final node = NodeGraph.findNode('C-RDC-ENTRANCE');
+      expect(node, isNotNull);
+      expect(node!.name, 'Entrée Pavillon C');
+      expect(node.building, 'Pavillon C');
+    });
+
+    test('findNode returns null for a non-existent ID', () {
+      final node = NodeGraph.findNode('NON-EXISTENT');
+      expect(node, isNull);
+    });
+
+    test('findNode finds a room on the first floor', () {
+      final node = NodeGraph.findNode('C-R1-104');
+      expect(node, isNotNull);
+      expect(node!.floor, 1);
+      expect(node.name, 'Salle C-104');
+    });
+
+    test('findNode finds a stairs node', () {
+      final node = NodeGraph.findNode('C-RDC-STAIRS-B');
+      expect(node, isNotNull);
+      expect(node!.type, NodeType.stairs);
+    });
+
+    test('nodesInBuilding returns only nodes from a specific building', () {
+      final nodes = NodeGraph.nodesInBuilding('Pavillon C');
+      expect(nodes.isNotEmpty, isTrue);
+      expect(nodes.every((n) => n.building == 'Pavillon C'), isTrue);
+    });
+
+    test('nodesOnFloor returns only nodes on a specific floor', () {
+      final nodes = NodeGraph.nodesOnFloor('Pavillon C', 1);
+      expect(nodes.isNotEmpty, isTrue);
+      expect(nodes.every((n) => n.floor == 1), isTrue);
+    });
+
+    test('distanceBetween computes a non-negative distance', () {
+      final a = NodeGraph.findNode('C-RDC-ENTRANCE')!;
+      final b = NodeGraph.findNode('GI-ENTRANCE')!;
+      final dist = NodeGraph.distanceBetween(a, b);
+      expect(dist, greaterThan(0));
+    });
+
+    test('findPath returns a valid path between connected nodes', () {
+      final path = NodeGraph.findPath('C-RDC-ENTRANCE', 'GI-ENTRANCE');
+      expect(path, isNotNull);
+      expect(path!.first.id, 'C-RDC-ENTRANCE');
+      expect(path.last.id, 'GI-ENTRANCE');
+    });
+  });
+
   group('ArPath', () {
     final route = CampusData.routes[0].compute(RouteMode.walk);
     final path = ArPath.fromRoute(route);
