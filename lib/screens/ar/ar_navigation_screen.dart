@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -308,7 +309,7 @@ class _MinimapPainter extends CustomPainter {
     // Remaining path, north up, walker near the bottom, ~1.4 px per metre.
     final origin = Offset(s.width * .3, s.height * .84);
     const k = 1.4;
-    final p = Path()..moveTo(origin.dx, origin.dy);
+    final p = ui.Path()..moveTo(origin.dx, origin.dy);
     for (final w in path.points.skip(1)) {
       p.lineTo(origin.dx + w.dx * k, origin.dy - w.dy * k);
     }
