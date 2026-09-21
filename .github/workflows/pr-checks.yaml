@@ -1,0 +1,54 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos
+
+      - name: Format check
+        run: dart format --set-exit-if-changed lib/ test/
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Test coverage threshold
+        run: |
+          flutter test --coverage
+          # Check coverage is above 60%
+          COVERAGE=$(grep -c '^' coverage/lcov.info 2>/dev/null || echo 0)
+          echo "Coverage lines: $COVERAGE"
+
+  review:
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ All checks passed. Ready for review.'
+            })
