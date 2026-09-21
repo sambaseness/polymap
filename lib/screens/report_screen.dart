@@ -48,7 +48,10 @@ class _ReportScreenState extends State<ReportScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             SizedBox(height: pad.top + 14),
-            const PmScreenHeader(title: 'Signaler', subtitle: 'Aidez-nous à corriger la carte du campus', titleSize: 23),
+            const PmScreenHeader(
+                title: 'Signaler',
+                subtitle: 'Aidez-nous à corriger la carte du campus',
+                titleSize: 23),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(horizontal: 22),
@@ -69,21 +72,32 @@ class _ReportScreenState extends State<ReportScreen> {
                   const SizedBox(height: 18),
                   const PmSectionLabel('Lieu concerné'),
                   PmCard(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 14),
                     child: Row(
                       children: <Widget>[
-                        PmTagBox(text: 'C', size: 30, radius: 9, fontSize: 10.5, background: pm.brown, foreground: PmFixed.white),
+                        PmTagBox(
+                            text: 'C',
+                            size: 30,
+                            radius: 9,
+                            fontSize: 10.5,
+                            background: pm.brown,
+                            foreground: PmFixed.white),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text('Pavillon C · 1er étage', style: PmText.label(color: pm.ink)),
-                              Text('Détecté automatiquement', style: PmText.sans(11.5, color: pm.ink2)),
+                              Text('Pavillon C · 1er étage',
+                                  style: PmText.label(color: pm.ink)),
+                              Text('Détecté automatiquement',
+                                  style: PmText.sans(11.5, color: pm.ink2)),
                             ],
                           ),
                         ),
-                        Text('Changer', style: PmText.sans(12.5, weight: FontWeight.w600, color: pm.blue)),
+                        Text('Changer',
+                            style: PmText.sans(12.5,
+                                weight: FontWeight.w600, color: pm.blue)),
                       ],
                     ),
                   ),
@@ -91,7 +105,8 @@ class _ReportScreenState extends State<ReportScreen> {
                   const PmSectionLabel('Détails'),
                   Container(
                     constraints: const BoxConstraints(minHeight: 104),
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 14),
                     decoration: BoxDecoration(
                       color: pm.surf,
                       border: Border.all(color: pm.line),
@@ -103,8 +118,10 @@ class _ReportScreenState extends State<ReportScreen> {
                       minLines: 3,
                       style: PmText.sans(13.5, color: pm.ink, height: 1.5),
                       decoration: InputDecoration(
-                        hintText: "La flèche AR pointe vers l'escalier A alors que l'accès se fait par l'escalier B…",
-                        hintStyle: PmText.sans(13.5, color: pm.ink2, height: 1.5),
+                        hintText:
+                            "La flèche AR pointe vers l'escalier A alors que l'accès se fait par l'escalier B…",
+                        hintStyle:
+                            PmText.sans(13.5, color: pm.ink2, height: 1.5),
                       ),
                     ),
                   ),
@@ -113,12 +130,15 @@ class _ReportScreenState extends State<ReportScreen> {
                     color: pm.line,
                     radius: 14,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 13),
                       child: Row(
                         children: <Widget>[
-                          SquareGlyph(color: pm.ink2, width: 30, height: 26, radius: 5),
+                          SquareGlyph(
+                              color: pm.ink2, width: 30, height: 26, radius: 5),
                           const SizedBox(width: 10),
-                          Text('Joindre une photo (optionnel)', style: PmText.sans(13, color: pm.ink2)),
+                          Text('Joindre une photo (optionnel)',
+                              style: PmText.sans(13, color: pm.ink2)),
                         ],
                       ),
                     ),
@@ -129,7 +149,8 @@ class _ReportScreenState extends State<ReportScreen> {
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(22, 0, 22, pad.bottom + 12),
-              child: PmButton(label: 'Envoyer le signalement', radius: 15, onTap: _send),
+              child: PmButton(
+                  label: 'Envoyer le signalement', radius: 15, onTap: _send),
             ),
           ],
         ),

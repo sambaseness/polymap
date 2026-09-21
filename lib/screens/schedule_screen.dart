@@ -29,12 +29,15 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             SizedBox(height: pad.top + 14),
-            const PmScreenHeader(title: 'Emploi du temps', subtitle: 'DUT1 Télécoms & Réseaux · S3',
+            const PmScreenHeader(
+                title: 'Emploi du temps',
+                subtitle: 'DUT1 Télécoms & Réseaux · S3',
                 padding: EdgeInsets.fromLTRB(22, 4, 22, 16)),
             Padding(
               padding: const EdgeInsets.fromLTRB(22, 0, 22, 18),
               child: PmSegmented<int>(
-                values: List<int>.generate(CampusData.weekDays.length, (i) => i),
+                values:
+                    List<int>.generate(CampusData.weekDays.length, (i) => i),
                 selected: _day,
                 labelOf: (i) => CampusData.weekDays[i],
                 onChanged: (i) => setState(() => _day = i),
@@ -58,33 +61,49 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
-                                  Text(c.hour, style: PmText.mono(13, weight: FontWeight.w500, color: pm.ink)),
-                                  Text(c.duration, style: PmText.mono(10.5, color: pm.ink2)),
+                                  Text(c.hour,
+                                      style: PmText.mono(13,
+                                          weight: FontWeight.w500,
+                                          color: pm.ink)),
+                                  Text(c.duration,
+                                      style: PmText.mono(10.5, color: pm.ink2)),
                                 ],
                               ),
                             ),
                             const SizedBox(width: 14),
                             Container(
                               width: 4,
-                              decoration: BoxDecoration(color: tintColor(pm, c.tint), borderRadius: BorderRadius.circular(2)),
+                              decoration: BoxDecoration(
+                                  color: tintColor(pm, c.tint),
+                                  borderRadius: BorderRadius.circular(2)),
                             ),
                             const SizedBox(width: 14),
                             Expanded(
                               child: PmCard(
-                                padding: const EdgeInsets.fromLTRB(14, 13, 14, 13),
+                                padding:
+                                    const EdgeInsets.fromLTRB(14, 13, 14, 13),
                                 onTap: () => PmNav.openRoute(context, 0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
-                                    Text(c.title, style: PmText.label(color: pm.ink)),
+                                    Text(c.title,
+                                        style: PmText.label(color: pm.ink)),
                                     const SizedBox(height: 2),
-                                    Text(c.room, style: PmText.sans(12, color: pm.ink2)),
+                                    Text(c.room,
+                                        style: PmText.sans(12, color: pm.ink2)),
                                     const SizedBox(height: 9),
                                     Row(
                                       children: <Widget>[
-                                        Container(width: 7, height: 7, decoration: BoxDecoration(color: pm.blue, shape: BoxShape.circle)),
+                                        Container(
+                                            width: 7,
+                                            height: 7,
+                                            decoration: BoxDecoration(
+                                                color: pm.blue,
+                                                shape: BoxShape.circle)),
                                         const SizedBox(width: 7),
-                                        Text(c.walk, style: PmText.mono(11, color: pm.blue)),
+                                        Text(c.walk,
+                                            style: PmText.mono(11,
+                                                color: pm.blue)),
                                       ],
                                     ),
                                   ],

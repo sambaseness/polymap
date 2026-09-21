@@ -44,7 +44,8 @@ abstract final class PmLayout {
 ///
 /// Wrap a Scaffold body with it: `body: PmPage(child: Column(...))`.
 class PmPage extends StatelessWidget {
-  const PmPage({super.key, required this.child, this.maxWidth = PmLayout.pageMaxWidth});
+  const PmPage(
+      {super.key, required this.child, this.maxWidth = PmLayout.pageMaxWidth});
   final Widget child;
   final double maxWidth;
 

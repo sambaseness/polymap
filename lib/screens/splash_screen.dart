@@ -17,7 +17,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _spin = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 1),
@@ -62,12 +63,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                   const SizedBox(height: 26),
                   Text(
                     'PolyMap',
-                    style: PmText.grotesk(42, weight: FontWeight.w700, color: PmFixed.white, ls: -0.03),
+                    style: PmText.grotesk(42,
+                        weight: FontWeight.w700,
+                        color: PmFixed.white,
+                        ls: -0.03),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'ESP · DAKAR',
-                    style: PmText.mono(10.5, color: PmFixed.white.withValues(alpha: 0.62), ls: 0.24),
+                    style: PmText.mono(10.5,
+                        color: PmFixed.white.withValues(alpha: 0.62), ls: 0.24),
                   ),
                 ],
               ),
@@ -100,7 +105,8 @@ class _SpinnerPainter extends CustomPainter {
       ..strokeWidth = 2.5
       ..color = PmFixed.white.withValues(alpha: 0.22);
     canvas.drawOval(rect, base);
-    canvas.drawArc(rect, -2.356, 1.571, false, base..color = PmFixed.brandOchre);
+    canvas.drawArc(
+        rect, -2.356, 1.571, false, base..color = PmFixed.brandOchre);
   }
 
   @override

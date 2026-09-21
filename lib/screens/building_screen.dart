@@ -41,7 +41,9 @@ class BuildingScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(18, 6, 18, 14),
               child: Row(
                 children: <Widget>[
-                  for (var i = 0; i < CampusData.floorLabels.length; i++) ...<Widget>[
+                  for (var i = 0;
+                      i < CampusData.floorLabels.length;
+                      i++) ...<Widget>[
                     if (i > 0) const SizedBox(width: 6),
                     _FloorPill(
                       label: CampusData.floorLabels[i],
@@ -85,7 +87,8 @@ class BuildingScreen extends StatelessWidget {
 }
 
 class _FloorPill extends StatelessWidget {
-  const _FloorPill({required this.label, required this.selected, required this.onTap});
+  const _FloorPill(
+      {required this.label, required this.selected, required this.onTap});
   final String label;
   final bool selected;
   final VoidCallback onTap;
@@ -106,7 +109,8 @@ class _FloorPill extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           child: Text(
             label,
-            style: PmText.sans(12.5, weight: FontWeight.w600, color: selected ? pm.onBlue : pm.ink2),
+            style: PmText.sans(12.5,
+                weight: FontWeight.w600, color: selected ? pm.onBlue : pm.ink2),
           ),
         ),
       ),
@@ -143,7 +147,8 @@ class _FloorPlan extends StatelessWidget {
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     color: pm.surf2,
-                    border: Border.symmetric(horizontal: BorderSide(color: pm.line)),
+                    border: Border.symmetric(
+                        horizontal: BorderSide(color: pm.line)),
                   ),
                 ),
               ),
@@ -168,7 +173,8 @@ class _FloorPlan extends StatelessWidget {
                     label: 'Salle ${rm.code}',
                     child: InkWell(
                       borderRadius: BorderRadius.circular(22),
-                      onTap: () => PmNav.push<void>(context, const RoomScreen()),
+                      onTap: () =>
+                          PmNav.push<void>(context, const RoomScreen()),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
@@ -182,7 +188,8 @@ class _FloorPlan extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          Text(rm.code, style: PmText.mono(9, color: pm.bldgInk)),
+                          Text(rm.code,
+                              style: PmText.mono(9, color: pm.bldgInk)),
                         ],
                       ),
                     ),
@@ -235,7 +242,10 @@ class _Legend extends StatelessWidget {
   Widget build(BuildContext context) => Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Container(width: 9, height: 9, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+          Container(
+              width: 9,
+              height: 9,
+              decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
           const SizedBox(width: 6),
           Text(label, style: PmText.sans(11.5, color: context.pm.ink2)),
         ],

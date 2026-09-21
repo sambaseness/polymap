@@ -90,20 +90,24 @@ void main() {
 
     test('stops placing arrows past the end of the path', () {
       const short = ArPath(<Offset>[Offset.zero, Offset(0, 5)]);
-      expect(short.arrows(first: 1, spacing: 2, count: 10).length, 3); // 1, 3, 5
+      expect(
+          short.arrows(first: 1, spacing: 2, count: 10).length, 3); // 1, 3, 5
     });
 
     test('guidance reports the next turn', () {
-      const rightTurn = ArPath(<Offset>[Offset.zero, Offset(0, 18), Offset(20, 18)]);
+      const rightTurn =
+          ArPath(<Offset>[Offset.zero, Offset(0, 18), Offset(20, 18)]);
       final g = rightTurn.guidance();
       expect(g.distance, 18);
       expect(g.turn, ArTurn.right);
       expect(g.distanceLabel, '18 m');
 
-      const leftTurn = ArPath(<Offset>[Offset.zero, Offset(0, 10), Offset(-20, 12)]);
+      const leftTurn =
+          ArPath(<Offset>[Offset.zero, Offset(0, 10), Offset(-20, 12)]);
       expect(leftTurn.guidance().turn, ArTurn.left);
 
-      const straight = ArPath(<Offset>[Offset.zero, Offset(0, 10), Offset(1, 30)]);
+      const straight =
+          ArPath(<Offset>[Offset.zero, Offset(0, 10), Offset(1, 30)]);
       expect(straight.guidance().turn, ArTurn.straight);
 
       const last = ArPath(<Offset>[Offset.zero, Offset(0, 7)]);
@@ -117,7 +121,8 @@ void main() {
         RouteLabel('Gauche', PmTint.brown, along: 8, side: -2),
       ]);
       expect(labels.length, 2);
-      expect(labels[0].pos.dx, closeTo(2, 1e-6)); // right of a northbound path = east
+      expect(labels[0].pos.dx,
+          closeTo(2, 1e-6)); // right of a northbound path = east
       expect(labels[0].pos.dy, closeTo(5, 1e-6));
       expect(labels[1].pos.dx, closeTo(-2, 1e-6));
     });
@@ -134,7 +139,8 @@ void main() {
     });
 
     test('controller applies drag offsets and wraps the heading', () {
-      final c = ArPoseController(initial: const ArPose(heading: 350, pitch: 0), source: _Silent());
+      final c = ArPoseController(
+          initial: const ArPose(heading: 350, pitch: 0), source: _Silent());
       c.drag(-80, 0, degreesPerPixel: 0.25); // drag left → turn right by 20°
       expect(c.pose.heading, closeTo(10, 1e-9));
       c.drag(0, 400); // pitch clamps

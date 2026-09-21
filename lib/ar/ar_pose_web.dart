@@ -38,7 +38,8 @@ class _WebPoseSource extends ArPoseSource {
   @override
   bool get needsPermission {
     if (web.window.navigator.maxTouchPoints == 0) return false;
-    final ctor = web.window.getProperty<JSObject?>('DeviceOrientationEvent'.toJS);
+    final ctor =
+        web.window.getProperty<JSObject?>('DeviceOrientationEvent'.toJS);
     return ctor != null && ctor.has('requestPermission');
   }
 
@@ -58,7 +59,8 @@ class _WebPoseSource extends ArPoseSource {
     final now = DateTime.now();
     if (absolute) {
       _lastAbsolute = now;
-    } else if (_lastAbsolute != null && now.difference(_lastAbsolute!).inSeconds < 2) {
+    } else if (_lastAbsolute != null &&
+        now.difference(_lastAbsolute!).inSeconds < 2) {
       return; // absolute events are flowing — ignore the relative ones
     }
 
@@ -67,11 +69,15 @@ class _WebPoseSource extends ArPoseSource {
     final gamma = ev.gamma ?? 0;
 
     // iOS Safari: alpha is arbitrary, but the compass heading is exposed.
-    final compass = (e as JSObject).getProperty<JSNumber?>('webkitCompassHeading'.toJS)?.toDartDouble;
+    final compass = (e as JSObject)
+        .getProperty<JSNumber?>('webkitCompassHeading'.toJS)
+        ?.toDartDouble;
     if (compass != null && !compass.isNaN) alpha = 360 - compass;
     if (alpha == null) return;
 
-    final a = alpha * math.pi / 180, b = beta * math.pi / 180, g = gamma * math.pi / 180;
+    final a = alpha * math.pi / 180,
+        b = beta * math.pi / 180,
+        g = gamma * math.pi / 180;
     final cA = math.cos(a), sA = math.sin(a);
     final cB = math.cos(b), sB = math.sin(b);
     final cG = math.cos(g), sG = math.sin(g);

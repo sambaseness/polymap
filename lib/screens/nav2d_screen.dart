@@ -35,7 +35,8 @@ class Nav2dScreen extends StatelessWidget {
           color: pm.brown,
           semantics: 'Passer en vue AR',
           onTap: () => _openAr(context),
-          child: const SquareGlyph(color: PmFixed.white, width: 15, height: 12, radius: 3),
+          child: const SquareGlyph(
+              color: PmFixed.white, width: 15, height: 12, radius: 3),
         ),
         const SizedBox(height: 8),
         _SideButton(
@@ -49,12 +50,17 @@ class Nav2dScreen extends StatelessWidget {
 
     return Scaffold(
       body: PmMapLayout(
-        map: CampusMap(roads: MapRoads.two, route: r, navigating: true, showLabels: false),
+        map: CampusMap(
+            roads: MapRoads.two, route: r, navigating: true, showLabels: false),
         compact: (map) => Stack(
           fit: StackFit.expand,
           children: <Widget>[
             map,
-            Positioned(top: pad.top + 6, left: 14, right: 14, child: _TurnCard(progress: progress)),
+            Positioned(
+                top: pad.top + 6,
+                left: 14,
+                right: 14,
+                child: _TurnCard(progress: progress)),
             Positioned(right: 14, top: pad.top + 208, child: sideButtons),
             Positioned(
               left: 0,
@@ -65,16 +71,25 @@ class Nav2dScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: pm.surf,
                   border: Border(top: BorderSide(color: pm.line)),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-                  boxShadow: <BoxShadow>[BoxShadow(color: pm.shadow, offset: const Offset(0, -10), blurRadius: 30)],
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(20)),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                        color: pm.shadow,
+                        offset: const Offset(0, -10),
+                        blurRadius: 30)
+                  ],
                 ),
-                child: _Status(progress: progress, onAr: () => _openAr(context)),
+                child:
+                    _Status(progress: progress, onAr: () => _openAr(context)),
               ),
             ),
           ],
         ),
         panel: Container(
-          decoration: BoxDecoration(color: pm.surf, border: Border(right: BorderSide(color: pm.line))),
+          decoration: BoxDecoration(
+              color: pm.surf,
+              border: Border(right: BorderSide(color: pm.line))),
           padding: EdgeInsets.fromLTRB(22, pad.top + 20, 22, pad.bottom + 22),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -85,7 +100,9 @@ class Nav2dScreen extends StatelessWidget {
             ],
           ),
         ),
-        mapOverlay: <Widget>[Positioned(right: 18, top: pad.top + 18, child: sideButtons)],
+        mapOverlay: <Widget>[
+          Positioned(right: 18, top: pad.top + 18, child: sideButtons)
+        ],
       ),
     );
   }
@@ -104,24 +121,35 @@ class _TurnCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: pm.blue,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: <BoxShadow>[BoxShadow(color: pm.shadow, offset: const Offset(0, 10), blurRadius: 28)],
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+              color: pm.shadow, offset: const Offset(0, 10), blurRadius: 28)
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Row(
             children: <Widget>[
-              SizedBox(width: 46, height: 46, child: Center(child: NavArrow(color: pm.onBlue))),
+              SizedBox(
+                  width: 46,
+                  height: 46,
+                  child: Center(child: NavArrow(color: pm.onBlue))),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(progress.current.dist,
-                        style: PmText.grotesk(34, weight: FontWeight.w700, color: pm.onBlue, height: 1)),
+                        style: PmText.grotesk(34,
+                            weight: FontWeight.w700,
+                            color: pm.onBlue,
+                            height: 1)),
                     const SizedBox(height: 3),
                     Text(progress.current.label,
-                        maxLines: 2, style: PmText.sans(14, color: pm.onBlue.withValues(alpha: .88))),
+                        maxLines: 2,
+                        style: PmText.sans(14,
+                            color: pm.onBlue.withValues(alpha: .88))),
                   ],
                 ),
               ),
@@ -140,7 +168,8 @@ class _TurnCard extends StatelessWidget {
                     'Puis ${_lower(progress.next!.label)} · ${progress.next!.dist}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: PmText.sans(12.5, color: pm.onBlue.withValues(alpha: .9)),
+                    style: PmText.sans(12.5,
+                        color: pm.onBlue.withValues(alpha: .9)),
                   ),
                 ),
               ],
@@ -151,7 +180,8 @@ class _TurnCard extends StatelessWidget {
     );
   }
 
-  static String _lower(String s) => s.isEmpty ? s : s[0].toLowerCase() + s.substring(1);
+  static String _lower(String s) =>
+      s.isEmpty ? s : s[0].toLowerCase() + s.substring(1);
 }
 
 /// Remaining time / distance, « Vue AR », stop, progress bar.
@@ -173,8 +203,11 @@ class _Status extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('${progress.minutesLeft} min', style: PmText.grotesk(24, weight: FontWeight.w700, color: pm.ink)),
-                  Text('${progress.metersLeft} m restants · arrivée ${progress.eta}',
+                  Text('${progress.minutesLeft} min',
+                      style: PmText.grotesk(24,
+                          weight: FontWeight.w700, color: pm.ink)),
+                  Text(
+                      '${progress.metersLeft} m restants · arrivée ${progress.eta}',
                       style: PmText.mono(11.5, color: pm.ink2)),
                 ],
               ),
@@ -216,7 +249,10 @@ class _Status extends StatelessWidget {
           borderRadius: BorderRadius.circular(3),
           child: SizedBox(
             height: 5,
-            child: LinearProgressIndicator(value: progress.fraction, backgroundColor: pm.surf2, color: pm.blue),
+            child: LinearProgressIndicator(
+                value: progress.fraction,
+                backgroundColor: pm.surf2,
+                color: pm.blue),
           ),
         ),
       ],
@@ -248,7 +284,9 @@ class _SideButton extends StatelessWidget {
       child: Container(
         width: 50,
         height: 50,
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), boxShadow: PmShadow.floating(pm)),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: PmShadow.floating(pm)),
         child: Material(
           color: color,
           shape: RoundedRectangleBorder(
@@ -289,7 +327,8 @@ class NavProgress {
     final minutesLeft = math.max(1, r.minutes - 1);
     final metersLeft = (r.distM * 0.75 / 5).round() * 5;
     final arrival = DateTime.now().add(Duration(minutes: minutesLeft));
-    final eta = '${arrival.hour.toString().padLeft(2, '0')}h${arrival.minute.toString().padLeft(2, '0')}';
+    final eta =
+        '${arrival.hour.toString().padLeft(2, '0')}h${arrival.minute.toString().padLeft(2, '0')}';
     return NavProgress(
       current: steps[ci],
       next: ci + 1 < steps.length ? steps[ci + 1] : null,

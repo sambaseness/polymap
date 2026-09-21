@@ -24,13 +24,38 @@ class ProfileScreen extends StatelessWidget {
     final pad = MediaQuery.paddingOf(context);
     final state = context.watch<AppState>();
     final name = state.isGuest ? 'Visiteur' : _nameFromEmail(state.userEmail);
-    final initials = name.split(' ').where((w) => w.isNotEmpty).map((w) => w[0].toUpperCase()).take(2).join();
+    final initials = name
+        .split(' ')
+        .where((w) => w.isNotEmpty)
+        .map((w) => w[0].toUpperCase())
+        .take(2)
+        .join();
 
     final menu = <(String, String, PmTint, VoidCallback)>[
-      ('Réglages', '', PmTint.blue, () => PmNav.push<void>(context, const SettingsScreen())),
-      ('Emploi du temps', 'DUT1 TR', PmTint.brown, () => PmNav.push<void>(context, const ScheduleScreen())),
-      ('Carte hors-ligne', '28 Mo', PmTint.ochre, () => PmNav.push<void>(context, const OfflineScreen())),
-      ('Signaler un problème', '', PmTint.brown, () => PmNav.push<void>(context, const ReportScreen())),
+      (
+        'Réglages',
+        '',
+        PmTint.blue,
+        () => PmNav.push<void>(context, const SettingsScreen())
+      ),
+      (
+        'Emploi du temps',
+        'DUT1 TR',
+        PmTint.brown,
+        () => PmNav.push<void>(context, const ScheduleScreen())
+      ),
+      (
+        'Carte hors-ligne',
+        '28 Mo',
+        PmTint.ochre,
+        () => PmNav.push<void>(context, const OfflineScreen())
+      ),
+      (
+        'Signaler un problème',
+        '',
+        PmTint.brown,
+        () => PmNav.push<void>(context, const ReportScreen())
+      ),
       ('Aide et contact ESP', '', PmTint.blue, () => PmNav.toHome(context)),
     ];
 
@@ -44,17 +69,24 @@ class ProfileScreen extends StatelessWidget {
                 width: 62,
                 height: 62,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(color: pm.brown, borderRadius: BorderRadius.circular(22)),
-                child: Text(initials, style: PmText.grotesk(22, color: PmFixed.white)),
+                decoration: BoxDecoration(
+                    color: pm.brown, borderRadius: BorderRadius.circular(22)),
+                child: Text(initials,
+                    style: PmText.grotesk(22, color: PmFixed.white)),
               ),
               const SizedBox(width: 15),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(name, maxLines: 1, overflow: TextOverflow.ellipsis, style: PmText.grotesk(22, color: pm.ink)),
+                    Text(name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: PmText.grotesk(22, color: pm.ink)),
                     Text(
-                      state.isGuest ? 'Mode visiteur · carte et itinéraires' : 'DUT1 Télécoms & Réseaux · 2025-2026',
+                      state.isGuest
+                          ? 'Mode visiteur · carte et itinéraires'
+                          : 'DUT1 Télécoms & Réseaux · 2025-2026',
                       style: PmText.sans(13, color: pm.ink2),
                     ),
                   ],
@@ -65,7 +97,11 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(height: 22),
           Row(
             children: <Widget>[
-              for (final (i, (v, k)) in const <(String, String)>[('38', 'Trajets ce mois'), ('12', 'Lieux favoris'), ('4', 'Signalements')].indexed) ...<Widget>[
+              for (final (i, (v, k)) in const <(String, String)>[
+                ('38', 'Trajets ce mois'),
+                ('12', 'Lieux favoris'),
+                ('4', 'Signalements')
+              ].indexed) ...<Widget>[
                 if (i > 0) const SizedBox(width: 10),
                 Expanded(
                   child: PmTile(
@@ -73,7 +109,9 @@ class ProfileScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(v, style: PmText.grotesk(20, weight: FontWeight.w700, color: pm.blue)),
+                        Text(v,
+                            style: PmText.grotesk(20,
+                                weight: FontWeight.w700, color: pm.blue)),
                         const SizedBox(height: 3),
                         Text(k, style: PmText.sans(11, color: pm.ink2)),
                       ],
@@ -89,16 +127,22 @@ class ProfileScreen extends StatelessWidget {
               onTap: go,
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 15),
-                decoration: BoxDecoration(border: Border(bottom: BorderSide(color: pm.line))),
+                decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: pm.line))),
                 child: Row(
                   children: <Widget>[
                     Container(
                       width: 30,
                       height: 30,
-                      decoration: BoxDecoration(color: tintColor(pm, tint), borderRadius: BorderRadius.circular(9)),
+                      decoration: BoxDecoration(
+                          color: tintColor(pm, tint),
+                          borderRadius: BorderRadius.circular(9)),
                     ),
                     const SizedBox(width: 13),
-                    Expanded(child: Text(label, style: PmText.sans(14.5, weight: FontWeight.w500, color: pm.ink))),
+                    Expanded(
+                        child: Text(label,
+                            style: PmText.sans(14.5,
+                                weight: FontWeight.w500, color: pm.ink))),
                     if (value.isNotEmpty) ...<Widget>[
                       Text(value, style: PmText.mono(11.5, color: pm.ink2)),
                       const SizedBox(width: 13),

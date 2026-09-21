@@ -65,7 +65,8 @@ class _DashedRRectPainter extends CustomPainter {
 
 /// Turns any path into a dashed path. [phase] shifts the pattern (animate it
 /// for the moving route dashes).
-Path dashPath(Path source, {required double dash, required double gap, double phase = 0}) {
+Path dashPath(Path source,
+    {required double dash, required double gap, double phase = 0}) {
   final out = Path();
   for (final ui.PathMetric metric in source.computeMetrics()) {
     final period = dash + gap;

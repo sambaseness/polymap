@@ -36,12 +36,19 @@ class ArrivalScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('VOUS ÊTES ARRIVÉ', style: PmText.mono(10, color: pm.onBlue.withValues(alpha: .8), ls: 0.18)),
+                  Text('VOUS ÊTES ARRIVÉ',
+                      style: PmText.mono(10,
+                          color: pm.onBlue.withValues(alpha: .8), ls: 0.18)),
                   const SizedBox(height: 10),
-                  Text('Salle $code', style: PmText.grotesk(32, weight: FontWeight.w700, color: pm.onBlue, ls: -0.02)),
+                  Text('Salle $code',
+                      style: PmText.grotesk(32,
+                          weight: FontWeight.w700,
+                          color: pm.onBlue,
+                          ls: -0.02)),
                   const SizedBox(height: 4),
                   Text('Département Génie Informatique · 1er étage',
-                      style: PmText.sans(14.5, color: pm.onBlue.withValues(alpha: .9))),
+                      style: PmText.sans(14.5,
+                          color: pm.onBlue.withValues(alpha: .9))),
                 ],
               ),
             ),
@@ -51,9 +58,14 @@ class ArrivalScreen extends StatelessWidget {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Expanded(child: _Stat(label: 'Capacité', value: '40 places')),
+                      Expanded(
+                          child: _Stat(label: 'Capacité', value: '40 places')),
                       const SizedBox(width: 10),
-                      Expanded(child: _Stat(label: 'Maintenant', value: 'Occupée', color: pm.brown)),
+                      Expanded(
+                          child: _Stat(
+                              label: 'Maintenant',
+                              value: 'Occupée',
+                              color: pm.brown)),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -61,10 +73,15 @@ class ArrivalScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const PmSectionLabel("Aujourd'hui", size: 9.5, ls: 0.14, bottom: 12),
-                        for (var i = 0; i < CampusData.todaySchedule.length; i++) ...<Widget>[
+                        const PmSectionLabel("Aujourd'hui",
+                            size: 9.5, ls: 0.14, bottom: 12),
+                        for (var i = 0;
+                            i < CampusData.todaySchedule.length;
+                            i++) ...<Widget>[
                           if (i > 0) const SizedBox(height: 11),
-                          OccupationRow(course: CampusData.todaySchedule[i], timeWidth: 82),
+                          OccupationRow(
+                              course: CampusData.todaySchedule[i],
+                              timeWidth: 82),
                         ],
                       ],
                     ),
@@ -78,13 +95,19 @@ class ArrivalScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                       clipBehavior: Clip.antiAlias,
                       child: InkWell(
-                        onTap: () => PmNav.push<void>(context, const ReportScreen()),
+                        onTap: () =>
+                            PmNav.push<void>(context, const ReportScreen()),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 13),
                           child: Row(
                             children: <Widget>[
-                              Expanded(child: Text('Cet itinéraire était-il juste ?', style: PmText.sans(13, color: pm.ink2))),
-                              Text('Donner un avis', style: PmText.sans(13, weight: FontWeight.w600, color: pm.blue)),
+                              Expanded(
+                                  child: Text('Cet itinéraire était-il juste ?',
+                                      style: PmText.sans(13, color: pm.ink2))),
+                              Text('Donner un avis',
+                                  style: PmText.sans(13,
+                                      weight: FontWeight.w600, color: pm.blue)),
                             ],
                           ),
                         ),
@@ -100,7 +123,8 @@ class ArrivalScreen extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: PmButton(
-                      label: fav ? 'Retirer des favoris' : 'Ajouter aux favoris',
+                      label:
+                          fav ? 'Retirer des favoris' : 'Ajouter aux favoris',
                       variant: PmButtonVariant.secondary,
                       radius: 15,
                       onTap: () => state.toggleFavorite(code),
@@ -108,7 +132,10 @@ class ArrivalScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: PmButton(label: 'Terminer', radius: 15, onTap: () => PmNav.toHome(context)),
+                    child: PmButton(
+                        label: 'Terminer',
+                        radius: 15,
+                        onTap: () => PmNav.toHome(context)),
                   ),
                 ],
               ),
@@ -138,7 +165,8 @@ class _Stat extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(value, maxLines: 1, style: PmText.grotesk(22, color: color ?? pm.ink)),
+            child: Text(value,
+                maxLines: 1, style: PmText.grotesk(22, color: color ?? pm.ink)),
           ),
         ],
       ),

@@ -50,7 +50,8 @@ class PmPlaceCard extends StatelessWidget {
                   name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: PmText.sans(14.5, weight: FontWeight.w600, color: pm.ink),
+                  style:
+                      PmText.sans(14.5, weight: FontWeight.w600, color: pm.ink),
                 ),
                 if (place.isNotEmpty)
                   Text(
@@ -88,17 +89,20 @@ class PmStepRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 9),
       decoration: BoxDecoration(
-        border: Border(bottom: BorderSide(color: last ? Colors.transparent : pm.line)),
+        border: Border(
+            bottom: BorderSide(color: last ? Colors.transparent : pm.line)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          PmTagBox(text: step.n, size: 24, radius: PmRadius.chip, fontSize: 10.5),
+          PmTagBox(
+              text: step.n, size: 24, radius: PmRadius.chip, fontSize: 10.5),
           const SizedBox(width: 12),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(top: 3),
-              child: Text(step.label, style: PmText.sans(13.5, color: pm.ink, height: 1.4)),
+              child: Text(step.label,
+                  style: PmText.sans(13.5, color: pm.ink, height: 1.4)),
             ),
           ),
           const SizedBox(width: 10),
@@ -114,7 +118,11 @@ class PmStepRow extends StatelessWidget {
 
 /// « 5 min · 335 m · 5 étapes » summary line.
 class PmRouteSummary extends StatelessWidget {
-  const PmRouteSummary({super.key, required this.minutes, required this.distM, required this.steps});
+  const PmRouteSummary(
+      {super.key,
+      required this.minutes,
+      required this.distM,
+      required this.steps});
   final int minutes;
   final int distM;
   final int steps;
@@ -124,9 +132,11 @@ class PmRouteSummary extends StatelessWidget {
     final pm = context.pm;
     return Row(
       children: <Widget>[
-        Text('$minutes min', style: PmText.grotesk(27, weight: FontWeight.w700, color: pm.blue)),
+        Text('$minutes min',
+            style: PmText.grotesk(27, weight: FontWeight.w700, color: pm.blue)),
         const SizedBox(width: 14),
-        Text('$distM m · $steps étapes', style: PmText.mono(12, color: pm.ink2)),
+        Text('$distM m · $steps étapes',
+            style: PmText.mono(12, color: pm.ink2)),
       ],
     );
   }
@@ -134,7 +144,8 @@ class PmRouteSummary extends StatelessWidget {
 
 /// Idle search field (« Salle, bâtiment, département… ») — tappable.
 class PmSearchPlaceholder extends StatelessWidget {
-  const PmSearchPlaceholder({super.key, this.onTap, this.elevated = false, this.height = 48});
+  const PmSearchPlaceholder(
+      {super.key, this.onTap, this.elevated = false, this.height = 48});
   final VoidCallback? onTap;
   final bool elevated;
   final double height;
@@ -192,7 +203,12 @@ class PmBottomNav extends StatelessWidget {
   final int active;
   final ValueChanged<int> onSelect;
 
-  static const List<String> labels = <String>['Carte', 'Recherche', 'Favoris', 'Profil'];
+  static const List<String> labels = <String>[
+    'Carte',
+    'Recherche',
+    'Favoris',
+    'Profil'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -209,7 +225,8 @@ class PmBottomNav extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          for (var i = 0; i < labels.length; i++) _Tab(i, active == i, onSelect),
+          for (var i = 0; i < labels.length; i++)
+            _Tab(i, active == i, onSelect),
         ],
       ),
     );
@@ -248,7 +265,8 @@ class _Tab extends StatelessWidget {
               const SizedBox(height: 5),
               Text(
                 PmBottomNav.labels[index],
-                style: PmText.sans(10.5, weight: on ? FontWeight.w600 : FontWeight.w400, color: c),
+                style: PmText.sans(10.5,
+                    weight: on ? FontWeight.w600 : FontWeight.w400, color: c),
               ),
             ],
           ),
@@ -292,10 +310,14 @@ class PmScreenHeader extends StatelessWidget {
                   title,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: PmText.grotesk(titleSize, weight: FontWeight.w700, color: pm.ink, ls: -0.02),
+                  style: PmText.grotesk(titleSize,
+                      weight: FontWeight.w700, color: pm.ink, ls: -0.02),
                 ),
                 if (subtitle != null)
-                  Text(subtitle!, maxLines: 1, overflow: TextOverflow.ellipsis, style: PmText.sans(12.5, color: pm.ink2)),
+                  Text(subtitle!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: PmText.sans(12.5, color: pm.ink2)),
               ],
             ),
           ),

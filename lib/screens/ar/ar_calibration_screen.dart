@@ -23,7 +23,8 @@ class ArCalibrationScreen extends StatefulWidget {
   State<ArCalibrationScreen> createState() => _ArCalibrationScreenState();
 }
 
-class _ArCalibrationScreenState extends State<ArCalibrationScreen> with SingleTickerProviderStateMixin {
+class _ArCalibrationScreenState extends State<ArCalibrationScreen>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _spin = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 1400),
@@ -79,14 +80,21 @@ class _ArCalibrationScreenState extends State<ArCalibrationScreen> with SingleTi
                           Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              border: Border.all(color: PmFixed.white.withValues(alpha: .14), width: 3),
+                              border: Border.all(
+                                  color: PmFixed.white.withValues(alpha: .14),
+                                  width: 3),
                             ),
                           ),
                           RotationTransition(
                             turns: _spin,
-                            child: CustomPaint(size: const Size(120, 120), painter: _ArcPainter()),
+                            child: CustomPaint(
+                                size: const Size(120, 120),
+                                painter: _ArcPainter()),
                           ),
-                          Text('$pct%', style: PmText.grotesk(26, weight: FontWeight.w700, color: PmFixed.white)),
+                          Text('$pct%',
+                              style: PmText.grotesk(26,
+                                  weight: FontWeight.w700,
+                                  color: PmFixed.white)),
                         ],
                       ),
                     ),
@@ -102,7 +110,9 @@ class _ArCalibrationScreenState extends State<ArCalibrationScreen> with SingleTi
                             height: 4,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(2),
-                              color: i < segments ? PmFixed.brandBlue : PmFixed.white.withValues(alpha: .2),
+                              color: i < segments
+                                  ? PmFixed.brandBlue
+                                  : PmFixed.white.withValues(alpha: .2),
                             ),
                           ),
                         ],
@@ -114,7 +124,8 @@ class _ArCalibrationScreenState extends State<ArCalibrationScreen> with SingleTi
               Positioned(
                 right: 20,
                 top: pad.top + 22,
-                child: ArExitButton(onTap: () => Navigator.of(context).maybePop()),
+                child:
+                    ArExitButton(onTap: () => Navigator.of(context).maybePop()),
               ),
               Positioned(
                 left: wide ? (MediaQuery.sizeOf(context).width - 440) / 2 : 24,
@@ -124,15 +135,21 @@ class _ArCalibrationScreenState extends State<ArCalibrationScreen> with SingleTi
                 child: Column(
                   children: <Widget>[
                     Text('Balayez lentement autour de vous',
-                        textAlign: TextAlign.center, style: PmText.grotesk(22, color: PmFixed.white)),
+                        textAlign: TextAlign.center,
+                        style: PmText.grotesk(22, color: PmFixed.white)),
                     const SizedBox(height: 10),
                     Text(
                       'PolyMap reconnaît les repères du couloir pour poser la flèche au bon endroit. Gardez le téléphone à hauteur de poitrine.',
                       textAlign: TextAlign.center,
-                      style: PmText.sans(13.5, color: PmFixed.white.withValues(alpha: .66), height: 1.55),
+                      style: PmText.sans(13.5,
+                          color: PmFixed.white.withValues(alpha: .66),
+                          height: 1.55),
                     ),
                     const SizedBox(height: 22),
-                    PmButton(label: "C'est fait", variant: PmButtonVariant.brand, onTap: _done),
+                    PmButton(
+                        label: "C'est fait",
+                        variant: PmButtonVariant.brand,
+                        onTap: _done),
                   ],
                 ),
               ),

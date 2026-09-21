@@ -70,20 +70,23 @@ class _AuthScreenState extends State<AuthScreen> {
           padding: EdgeInsets.fromLTRB(26, pad.top + 48, 26, pad.bottom + 12),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              minHeight: MediaQuery.sizeOf(context).height - pad.top - pad.bottom - 60,
+              minHeight:
+                  MediaQuery.sizeOf(context).height - pad.top - pad.bottom - 60,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Text('Se connecter',
-                    style: PmText.grotesk(28, weight: FontWeight.w700, color: pm.ink, ls: -0.02)),
+                    style: PmText.grotesk(28,
+                        weight: FontWeight.w700, color: pm.ink, ls: -0.02)),
                 const SizedBox(height: 6),
                 Text(
                   'Avec votre compte ESP pour retrouver votre emploi du temps et vos favoris.',
                   style: PmText.sans(14, color: pm.ink2, height: 1.5),
                 ),
                 const SizedBox(height: 30),
-                const PmSectionLabel('Adresse ESP', size: 9.5, ls: 0.14, bottom: 7),
+                const PmSectionLabel('Adresse ESP',
+                    size: 9.5, ls: 0.14, bottom: 7),
                 _Field(
                   controller: _email,
                   focusNode: _emailFocus,
@@ -93,7 +96,8 @@ class _AuthScreenState extends State<AuthScreen> {
                   onSubmitted: (_) => _passwordFocus.requestFocus(),
                 ),
                 const SizedBox(height: 12),
-                const PmSectionLabel('Mot de passe', size: 9.5, ls: 0.14, bottom: 7),
+                const PmSectionLabel('Mot de passe',
+                    size: 9.5, ls: 0.14, bottom: 7),
                 _Field(
                   controller: _password,
                   focusNode: _passwordFocus,
@@ -105,7 +109,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     onTap: () => setState(() => _showPassword = !_showPassword),
                     child: Text(
                       _showPassword ? 'Masquer' : 'Afficher',
-                      style: PmText.sans(12.5, weight: FontWeight.w600, color: pm.blue),
+                      style: PmText.sans(12.5,
+                          weight: FontWeight.w600, color: pm.blue),
                     ),
                   ),
                 ),
@@ -113,10 +118,15 @@ class _AuthScreenState extends State<AuthScreen> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: Text('Mot de passe oublié ?',
-                      style: PmText.sans(12.5, weight: FontWeight.w600, color: pm.blue)),
+                      style: PmText.sans(12.5,
+                          weight: FontWeight.w600, color: pm.blue)),
                 ),
                 const SizedBox(height: 22),
-                PmButton(label: 'Se connecter', height: 54, fontSize: 16, onTap: _signIn),
+                PmButton(
+                    label: 'Se connecter',
+                    height: 54,
+                    fontSize: 16,
+                    onTap: _signIn),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24),
                   child: Row(
@@ -124,7 +134,8 @@ class _AuthScreenState extends State<AuthScreen> {
                       const Expanded(child: PmDivider()),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Text('OU', style: PmText.mono(10, color: pm.ink2, ls: 0.12)),
+                        child: Text('OU',
+                            style: PmText.mono(10, color: pm.ink2, ls: 0.12)),
                       ),
                       const Expanded(child: PmDivider()),
                     ],
@@ -182,7 +193,8 @@ class _Field extends StatelessWidget {
       decoration: BoxDecoration(
         color: pm.surf,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: focused ? pm.blue : pm.line, width: focused ? 1.5 : 1),
+        border: Border.all(
+            color: focused ? pm.blue : pm.line, width: focused ? 1.5 : 1),
       ),
       child: Row(
         children: <Widget>[
@@ -194,11 +206,13 @@ class _Field extends StatelessWidget {
               keyboardType: keyboardType,
               autofillHints: autofillHints,
               onSubmitted: onSubmitted,
-              textInputAction: onSubmitted == null ? null : TextInputAction.next,
+              textInputAction:
+                  onSubmitted == null ? null : TextInputAction.next,
               style: PmText.sans(14.5, color: pm.ink, ls: obscure ? 0.3 : 0),
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: PmText.sans(14.5, color: pm.ink2, ls: obscure ? 0.3 : 0),
+                hintStyle:
+                    PmText.sans(14.5, color: pm.ink2, ls: obscure ? 0.3 : 0),
               ),
             ),
           ),

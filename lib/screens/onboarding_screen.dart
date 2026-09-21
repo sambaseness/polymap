@@ -42,7 +42,11 @@ class OnboardingScreen extends StatelessWidget {
                 const SizedBox(height: 26),
                 Text(
                   'Trouvez votre salle,\npas votre chemin.',
-                  style: PmText.grotesk(32, weight: FontWeight.w700, color: pm.ink, ls: -0.025, height: 1.1),
+                  style: PmText.grotesk(32,
+                      weight: FontWeight.w700,
+                      color: pm.ink,
+                      ls: -0.025,
+                      height: 1.1),
                 ),
                 const SizedBox(height: 12),
                 Text(
@@ -58,21 +62,27 @@ class OnboardingScreen extends StatelessWidget {
                         title: 'Position',
                         body: 'Pour vous localiser sur le campus',
                         tint: pm.blue,
-                        glyph: CircleGlyph(color: pm.onBlue, size: 11, filled: true),
+                        glyph: CircleGlyph(
+                            color: pm.onBlue, size: 11, filled: true),
                       ),
                       const SizedBox(height: 10),
                       _PermissionCard(
                         title: 'Caméra',
                         body: 'Nécessaire au mode réalité augmentée',
                         tint: pm.brown,
-                        glyph: const SquareGlyph(color: PmFixed.white, width: 14, height: 11, radius: 3),
+                        glyph: const SquareGlyph(
+                            color: PmFixed.white,
+                            width: 14,
+                            height: 11,
+                            radius: 3),
                       ),
                       const SizedBox(height: 10),
                       _PermissionCard(
                         title: 'Boussole',
                         body: "Pour orienter la flèche à l'écran",
                         tint: pm.ochre,
-                        glyph: const DiamondGlyph(color: Color(0xFF1B1206), size: 12, radius: 2),
+                        glyph: const DiamondGlyph(
+                            color: Color(0xFF1B1206), size: 12, radius: 2),
                       ),
                     ],
                   ),
@@ -124,7 +134,8 @@ class _PermissionCard extends StatelessWidget {
             width: 32,
             height: 32,
             alignment: Alignment.center,
-            decoration: BoxDecoration(color: tint, borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(
+                color: tint, borderRadius: BorderRadius.circular(10)),
             child: glyph,
           ),
           const SizedBox(width: 13),
@@ -134,7 +145,8 @@ class _PermissionCard extends StatelessWidget {
               children: <Widget>[
                 Text(title, style: PmText.label(color: pm.ink)),
                 const SizedBox(height: 2),
-                Text(body, style: PmText.sans(12.5, color: pm.ink2, height: 1.4)),
+                Text(body,
+                    style: PmText.sans(12.5, color: pm.ink2, height: 1.4)),
               ],
             ),
           ),

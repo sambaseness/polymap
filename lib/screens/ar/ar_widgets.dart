@@ -53,15 +53,20 @@ class ArExitButton extends StatelessWidget {
           radius: 12,
           padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 9),
           onTap: onTap,
-          child: Text('Vue 2D', style: PmText.sans(12.5, weight: FontWeight.w600, color: PmFixed.white)),
+          child: Text('Vue 2D',
+              style: PmText.sans(12.5,
+                  weight: FontWeight.w600, color: PmFixed.white)),
         ),
       );
-
 }
 
 /// Door label: tinted pill with a small ochre dot — « C-104 · Bureau ».
 class ArDoorLabel extends StatelessWidget {
-  const ArDoorLabel({super.key, required this.text, required this.color, this.dot = PmFixed.brandOchre});
+  const ArDoorLabel(
+      {super.key,
+      required this.text,
+      required this.color,
+      this.dot = PmFixed.brandOchre});
   final String text;
   final Color color;
   final Color dot;
@@ -69,13 +74,19 @@ class ArDoorLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-        decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(
+            color: color, borderRadius: BorderRadius.circular(10)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Container(width: 7, height: 7, decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
+            Container(
+                width: 7,
+                height: 7,
+                decoration: BoxDecoration(color: dot, shape: BoxShape.circle)),
             const SizedBox(width: 8),
-            Text(text, style: PmText.sans(12, weight: FontWeight.w600, color: PmFixed.white)),
+            Text(text,
+                style: PmText.sans(12,
+                    weight: FontWeight.w600, color: PmFixed.white)),
           ],
         ),
       );
@@ -101,7 +112,8 @@ class ArNextTurnCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text('PROCHAIN VIRAGE',
-                style: PmText.mono(9.5, color: PmFixed.white.withValues(alpha: .55), ls: 0.16)),
+                style: PmText.mono(9.5,
+                    color: PmFixed.white.withValues(alpha: .55), ls: 0.16)),
             const SizedBox(height: 6),
             Row(
               crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -109,11 +121,15 @@ class ArNextTurnCard extends StatelessWidget {
               children: <Widget>[
                 Text(distance, style: PmText.navFigure(color: PmFixed.white)),
                 const SizedBox(width: 10),
-                Text(direction, style: PmText.sans(13, color: PmFixed.white.withValues(alpha: .7))),
+                Text(direction,
+                    style: PmText.sans(13,
+                        color: PmFixed.white.withValues(alpha: .7))),
               ],
             ),
             const SizedBox(height: 6),
-            Text(eta, style: PmText.sans(12.5, color: PmFixed.white.withValues(alpha: .75))),
+            Text(eta,
+                style: PmText.sans(12.5,
+                    color: PmFixed.white.withValues(alpha: .75))),
           ],
         ),
       );

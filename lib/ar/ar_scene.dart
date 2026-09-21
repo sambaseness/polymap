@@ -58,8 +58,13 @@ class _ArSceneState extends State<ArScene> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _arrows = widget.path.arrows(first: widget.firstArrow, spacing: widget.arrowSpacing, count: widget.arrowCount);
-    _ticker = createTicker((elapsed) => _time.value = elapsed.inMicroseconds / 1e6)..start();
+    _arrows = widget.path.arrows(
+        first: widget.firstArrow,
+        spacing: widget.arrowSpacing,
+        count: widget.arrowCount);
+    _ticker =
+        createTicker((elapsed) => _time.value = elapsed.inMicroseconds / 1e6)
+          ..start();
   }
 
   @override
@@ -69,7 +74,10 @@ class _ArSceneState extends State<ArScene> with SingleTickerProviderStateMixin {
         old.arrowCount != widget.arrowCount ||
         old.arrowSpacing != widget.arrowSpacing ||
         old.firstArrow != widget.firstArrow) {
-      _arrows = widget.path.arrows(first: widget.firstArrow, spacing: widget.arrowSpacing, count: widget.arrowCount);
+      _arrows = widget.path.arrows(
+          first: widget.firstArrow,
+          spacing: widget.arrowSpacing,
+          count: widget.arrowCount);
     }
   }
 
@@ -116,7 +124,11 @@ class _Projected {
 }
 
 class _Camera {
-  _Camera({required this.pose, required this.size, required this.eyeHeight, required double vfovDeg}) {
+  _Camera(
+      {required this.pose,
+      required this.size,
+      required this.eyeHeight,
+      required double vfovDeg}) {
     final yaw = pose.heading * math.pi / 180;
     final pitch = pose.pitch * math.pi / 180;
     final roll = pose.roll * math.pi / 180;
@@ -157,7 +169,8 @@ class _Camera {
   _Projected? project(double e, double y, double n) {
     final (x, yy, z) = toCamera(e, y, n);
     if (z < near) return null;
-    return _Projected(Offset(centre.dx + focal * x / z, centre.dy - focal * yy / z), z);
+    return _Projected(
+        Offset(centre.dx + focal * x / z, centre.dy - focal * yy / z), z);
   }
 }
 
@@ -202,15 +215,18 @@ class _ScenePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final cam = _Camera(pose: pose, size: size, eyeHeight: eyeHeight, vfovDeg: vfovDeg);
+    final cam =
+        _Camera(pose: pose, size: size, eyeHeight: eyeHeight, vfovDeg: vfovDeg);
     _paintTrail(canvas, cam);
 
     final maxDist = arrows.isEmpty ? 1.0 : arrows.last.distance + 2;
     // Far to near so nearer arrows overdraw farther ones.
-    final ordered = List<ArArrowPlacement>.of(arrows)..sort((a, b) => b.distance.compareTo(a.distance));
+    final ordered = List<ArArrowPlacement>.of(arrows)
+      ..sort((a, b) => b.distance.compareTo(a.distance));
     for (final a in ordered) {
       final alpha = (1.15 - a.distance / maxDist).clamp(0.18, 1.0);
-      final bob = a.index == 0 ? 0.10 * (0.5 + 0.5 * math.sin(time * 2.4)) : 0.0;
+      final bob =
+          a.index == 0 ? 0.10 * (0.5 + 0.5 * math.sin(time * 2.4)) : 0.0;
       _paintArrow(canvas, cam, a, alpha, bob);
     }
     for (final l in labels) {
@@ -224,7 +240,10 @@ class _ScenePainter extends CustomPainter {
     // Start under the first arrow rather than under the camera (which is
     // behind the near plane whenever the phone is level).
     final world = <Offset>[
-      if (arrows.isNotEmpty) arrows.first.pos + origin else path.points.first + origin,
+      if (arrows.isNotEmpty)
+        arrows.first.pos + origin
+      else
+        path.points.first + origin,
       ...path.points.skip(1).map((p) => p + origin),
     ];
     final pts = <Offset>[];
@@ -247,7 +266,8 @@ class _ScenePainter extends CustomPainter {
     );
   }
 
-  void _paintArrow(Canvas canvas, _Camera cam, ArArrowPlacement a, double alpha, double bob) {
+  void _paintArrow(Canvas canvas, _Camera cam, ArArrowPlacement a, double alpha,
+      double bob) {
     final b = a.bearing * math.pi / 180;
     final cb = math.cos(b), sb = math.sin(b);
     final base = _hover + bob;
@@ -261,9 +281,11 @@ class _ScenePainter extends CustomPainter {
     // Ground glow (soft ellipse) — the design's radial halo under the arrow.
     final centre = cam.project(a.pos.dx + origin.dx, 0.0, a.pos.dy + origin.dy);
     if (centre == null) return;
-    final glowR = (cam.focal * 0.55 * _arrowScale / centre.depth).clamp(4.0, 90.0);
+    final glowR =
+        (cam.focal * 0.55 * _arrowScale / centre.depth).clamp(4.0, 90.0);
     canvas.drawOval(
-      Rect.fromCenter(center: centre.screen, width: glowR * 2.2, height: glowR * 0.9),
+      Rect.fromCenter(
+          center: centre.screen, width: glowR * 2.2, height: glowR * 0.9),
       Paint()
         ..color = PmFixed.brandBlue.withValues(alpha: 0.28 * alpha)
         ..maskFilter = MaskFilter.blur(BlurStyle.normal, glowR * 0.5),
@@ -297,7 +319,8 @@ class _ScenePainter extends CustomPainter {
       // outward side of the face.
       final toCam = Offset(-mid.dx, -mid.dy);
       if (toCam.dx * n.dx + toCam.dy * n.dy <= 0) continue;
-      final shade = 0.50 + 0.30 * math.max(0, n.dx * light.dx + n.dy * light.dy);
+      final shade =
+          0.50 + 0.30 * math.max(0, n.dx * light.dx + n.dy * light.dy);
       final quad = Path()
         ..moveTo(bottom[i]!.screen.dx, bottom[i]!.screen.dy)
         ..lineTo(bottom[j]!.screen.dx, bottom[j]!.screen.dy)
@@ -308,7 +331,11 @@ class _ScenePainter extends CustomPainter {
     }
     faces.sort((x, y) => y.$1.compareTo(x.$1));
     for (final (_, quad, shade) in faces) {
-      canvas.drawPath(quad, Paint()..color = _shade(PmFixed.brandBlue, shade).withValues(alpha: alpha));
+      canvas.drawPath(
+          quad,
+          Paint()
+            ..color =
+                _shade(PmFixed.brandBlue, shade).withValues(alpha: alpha));
     }
 
     // Top face.
@@ -317,7 +344,10 @@ class _ScenePainter extends CustomPainter {
       topPath.lineTo(p!.screen.dx, p.screen.dy);
     }
     topPath.close();
-    canvas.drawPath(topPath, Paint()..color = _lighten(PmFixed.brandBlue, 0.10).withValues(alpha: alpha));
+    canvas.drawPath(
+        topPath,
+        Paint()
+          ..color = _lighten(PmFixed.brandBlue, 0.10).withValues(alpha: alpha));
     canvas.drawPath(
       topPath,
       Paint()
@@ -328,15 +358,22 @@ class _ScenePainter extends CustomPainter {
   }
 
   void _paintLabel(Canvas canvas, _Camera cam, ArLabel l) {
-    final anchor = cam.project(l.pos.dx + origin.dx, l.height, l.pos.dy + origin.dy);
+    final anchor =
+        cam.project(l.pos.dx + origin.dx, l.height, l.pos.dy + origin.dy);
     if (anchor == null) return;
     final scale = (cam.focal / anchor.depth / 60).clamp(0.55, 1.15);
     final tp = TextPainter(
-      text: TextSpan(text: l.text, style: PmText.sans(12 * scale, weight: FontWeight.w600, color: PmFixed.white)),
+      text: TextSpan(
+          text: l.text,
+          style: PmText.sans(12 * scale,
+              weight: FontWeight.w600, color: PmFixed.white)),
       textDirection: TextDirection.ltr,
       maxLines: 1,
     )..layout();
-    final dot = 7.0 * scale, padX = 11.0 * scale, padY = 7.0 * scale, gap = 8.0 * scale;
+    final dot = 7.0 * scale,
+        padX = 11.0 * scale,
+        padY = 7.0 * scale,
+        gap = 8.0 * scale;
     final w = padX * 2 + dot + gap + tp.width, h = padY * 2 + tp.height;
     final rect = Rect.fromCenter(center: anchor.screen, width: w, height: h);
     final fill = switch (l.tint) {
@@ -344,11 +381,14 @@ class _ScenePainter extends CustomPainter {
       PmTint.ochre => PmFixed.brandOchre.withValues(alpha: .94),
       _ => PmFixed.brandBlue.withValues(alpha: .86),
     };
-    canvas.drawRRect(RRect.fromRectAndRadius(rect, Radius.circular(10 * scale)), Paint()..color = fill);
+    canvas.drawRRect(RRect.fromRectAndRadius(rect, Radius.circular(10 * scale)),
+        Paint()..color = fill);
     canvas.drawCircle(
       Offset(rect.left + padX + dot / 2, rect.center.dy),
       dot / 2,
-      Paint()..color = l.tint == PmTint.brown ? PmFixed.ochreLight : PmFixed.brandOchre,
+      Paint()
+        ..color =
+            l.tint == PmTint.brown ? PmFixed.ochreLight : PmFixed.brandOchre,
     );
     tp.paint(canvas, Offset(rect.left + padX + dot + gap, rect.top + padY));
     // Stem down to the anchor's ground point.
@@ -390,7 +430,8 @@ class _ScenePainter extends CustomPainter {
     );
   }
 
-  static double _bearingOf(Offset p) => (math.atan2(p.dx, p.dy) * 180 / math.pi + 360) % 360;
+  static double _bearingOf(Offset p) =>
+      (math.atan2(p.dx, p.dy) * 180 / math.pi + 360) % 360;
   static double _shortest(double deg) => ((deg + 540) % 360) - 180;
 
   static Color _shade(Color c, double k) => Color.fromARGB(

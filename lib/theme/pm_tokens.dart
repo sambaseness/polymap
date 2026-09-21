@@ -53,7 +53,8 @@ abstract final class PmShadow {
 
   /// « feuille » — bottom sheets.
   static List<BoxShadow> sheet(PmColors pm) => <BoxShadow>[
-        BoxShadow(color: pm.shadow, offset: const Offset(0, -12), blurRadius: 34),
+        BoxShadow(
+            color: pm.shadow, offset: const Offset(0, -12), blurRadius: 34),
       ];
 
   /// « AR » — the floating arrow's blue glow (theme-independent).

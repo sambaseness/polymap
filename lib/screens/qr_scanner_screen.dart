@@ -208,12 +208,14 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                   Positioned(
                     bottom: -1,
                     left: -1,
-                    child: _CornerBracket(color: pm.ochre, isTopLeft: false, isBottom: true),
+                    child: _CornerBracket(
+                        color: pm.ochre, isTopLeft: false, isBottom: true),
                   ),
                   Positioned(
                     bottom: -1,
                     right: -1,
-                    child: _CornerBracket(color: pm.ochre, isTopLeft: false, isBottom: true),
+                    child: _CornerBracket(
+                        color: pm.ochre, isTopLeft: false, isBottom: true),
                   ),
                 ],
               ),
@@ -494,7 +496,8 @@ class _PositionConfirmedSheet extends StatelessWidget {
                   child: Center(
                     child: Text(
                       building,
-                      style: PmText.mono(12, weight: FontWeight.w600, color: pm.blue),
+                      style: PmText.mono(12,
+                          weight: FontWeight.w600, color: pm.blue),
                     ),
                   ),
                 ),

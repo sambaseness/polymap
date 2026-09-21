@@ -44,7 +44,11 @@ class RouteScreen extends StatelessWidget {
           fit: StackFit.expand,
           children: <Widget>[
             map,
-            Positioned(top: pad.top + 8, left: 16, right: 16, child: _Header(route: r, mode: state.mode)),
+            Positioned(
+                top: pad.top + 8,
+                left: 16,
+                right: 16,
+                child: _Header(route: r, mode: state.mode)),
             Positioned(left: 0, right: 0, bottom: 0, child: _Sheet(route: r)),
           ],
         ),
@@ -68,16 +72,21 @@ class _Header extends StatelessWidget {
       children: <Widget>[
         Row(
           children: <Widget>[
-            PmBackButton(size: 26, onTap: () => Navigator.of(context).maybePop()),
+            PmBackButton(
+                size: 26, onTap: () => Navigator.of(context).maybePop()),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text('Départ · ${route.route.from}',
-                      maxLines: 1, overflow: TextOverflow.ellipsis, style: PmText.sans(11.5, color: pm.ink2)),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: PmText.sans(11.5, color: pm.ink2)),
                   Text(route.route.to,
-                      maxLines: 1, overflow: TextOverflow.ellipsis, style: PmText.grotesk(17, color: pm.ink)),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: PmText.grotesk(17, color: pm.ink)),
                 ],
               ),
             ),
@@ -99,7 +108,9 @@ class _Header extends StatelessWidget {
     return PmCard(
       radius: 16,
       padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-      shadow: <BoxShadow>[BoxShadow(color: pm.shadow, offset: const Offset(0, 8), blurRadius: 24)],
+      shadow: <BoxShadow>[
+        BoxShadow(color: pm.shadow, offset: const Offset(0, 8), blurRadius: 24)
+      ],
       child: body,
     );
   }
@@ -115,8 +126,10 @@ class _Steps extends StatelessWidget {
     final rows = <Widget>[for (final s in route.steps) PmStepRow(s)];
     if (!scrollable) return Column(children: rows);
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.34),
-      child: ListView(shrinkWrap: true, padding: EdgeInsets.zero, children: rows),
+      constraints:
+          BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.34),
+      child:
+          ListView(shrinkWrap: true, padding: EdgeInsets.zero, children: rows),
     );
   }
 }
@@ -129,7 +142,11 @@ class _StartButton extends StatelessWidget {
         label: 'Démarrer la navigation',
         height: 54,
         fontSize: 16,
-        leading: Chevron(color: context.pm.onBlue, size: 10, thickness: 2.5, direction: AxisDirection.up),
+        leading: Chevron(
+            color: context.pm.onBlue,
+            size: 10,
+            thickness: 2.5,
+            direction: AxisDirection.up),
         onTap: () => PmNav.push<void>(context, const Nav2dScreen()),
       );
 }
@@ -155,7 +172,10 @@ class _Sheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          PmRouteSummary(minutes: route.minutes, distM: route.distM, steps: route.steps.length),
+          PmRouteSummary(
+              minutes: route.minutes,
+              distM: route.distM,
+              steps: route.steps.length),
           const SizedBox(height: 14),
           _Steps(route: route),
           const SizedBox(height: 16),
@@ -177,7 +197,8 @@ class _Panel extends StatelessWidget {
     final pm = context.pm;
     final pad = MediaQuery.paddingOf(context);
     return Container(
-      decoration: BoxDecoration(color: pm.surf, border: Border(right: BorderSide(color: pm.line))),
+      decoration: BoxDecoration(
+          color: pm.surf, border: Border(right: BorderSide(color: pm.line))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
@@ -190,7 +211,10 @@ class _Panel extends StatelessWidget {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(22, 18, 22, 18),
               children: <Widget>[
-                PmRouteSummary(minutes: route.minutes, distM: route.distM, steps: route.steps.length),
+                PmRouteSummary(
+                    minutes: route.minutes,
+                    distM: route.distM,
+                    steps: route.steps.length),
                 const SizedBox(height: 14),
                 _Steps(route: route, scrollable: false),
               ],

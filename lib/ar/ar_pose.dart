@@ -3,7 +3,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 
-import 'ar_pose_stub.dart' if (dart.library.io) 'ar_pose_io.dart' if (dart.library.js_interop) 'ar_pose_web.dart' as platform;
+import 'ar_pose_stub.dart'
+    if (dart.library.io) 'ar_pose_io.dart'
+    if (dart.library.js_interop) 'ar_pose_web.dart' as platform;
 
 /// Where the rear camera is looking, in the world frame.
 ///
@@ -21,11 +23,14 @@ class ArPose {
 
   static const ArPose initial = ArPose(heading: 0, pitch: -8);
 
-  ArPose copyWith({double? heading, double? pitch, double? roll}) =>
-      ArPose(heading: heading ?? this.heading, pitch: pitch ?? this.pitch, roll: roll ?? this.roll);
+  ArPose copyWith({double? heading, double? pitch, double? roll}) => ArPose(
+      heading: heading ?? this.heading,
+      pitch: pitch ?? this.pitch,
+      roll: roll ?? this.roll);
 
   @override
-  String toString() => 'ArPose(h ${heading.toStringAsFixed(0)}°, p ${pitch.toStringAsFixed(0)}°)';
+  String toString() =>
+      'ArPose(h ${heading.toStringAsFixed(0)}°, p ${pitch.toStringAsFixed(0)}°)';
 }
 
 /// Platform source of raw poses (sensors on mobile, DeviceOrientation on web).
@@ -51,7 +56,8 @@ class ArPoseController extends ChangeNotifier {
         _source = source ?? platform.createPoseSource() {
     _sub = _source.poses.listen(_onPose);
     _watchdog = Timer.periodic(const Duration(seconds: 1), (_) {
-      final alive = _lastEvent != null && DateTime.now().difference(_lastEvent!).inSeconds < 3;
+      final alive = _lastEvent != null &&
+          DateTime.now().difference(_lastEvent!).inSeconds < 3;
       if (alive != _sensorsActive) {
         _sensorsActive = alive;
         notifyListeners();
@@ -72,7 +78,8 @@ class ArPoseController extends ChangeNotifier {
   /// True while the platform is delivering orientation events.
   bool get sensorsActive => _sensorsActive;
   bool _permissionAsked = false;
-  bool get needsPermission => _source.needsPermission && !_sensorsActive && !_permissionAsked;
+  bool get needsPermission =>
+      _source.needsPermission && !_sensorsActive && !_permissionAsked;
 
   /// The pose to render: sensed (smoothed) + drag offsets, pitch clamped.
   ArPose get pose => ArPose(
@@ -135,8 +142,11 @@ class ArPoseController extends ChangeNotifier {
 }
 
 /// Camera-forward vector expressed in a world basis (east, north, up) → pose.
-ArPose poseFromForward(double east, double north, double up, {double roll = 0}) {
+ArPose poseFromForward(double east, double north, double up,
+    {double roll = 0}) {
   final heading = math.atan2(east, north) * 180 / math.pi;
-  final pitch = math.atan2(up, math.sqrt(east * east + north * north)) * 180 / math.pi;
-  return ArPose(heading: ((heading % 360) + 360) % 360, pitch: pitch, roll: roll);
+  final pitch =
+      math.atan2(up, math.sqrt(east * east + north * north)) * 180 / math.pi;
+  return ArPose(
+      heading: ((heading % 360) + 360) % 360, pitch: pitch, roll: roll);
 }
