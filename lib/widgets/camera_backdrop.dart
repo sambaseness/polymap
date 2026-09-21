@@ -35,7 +35,8 @@ class CameraBackdrop extends StatefulWidget {
   State<CameraBackdrop> createState() => _CameraBackdropState();
 }
 
-class _CameraBackdropState extends State<CameraBackdrop> with WidgetsBindingObserver {
+class _CameraBackdropState extends State<CameraBackdrop>
+    with WidgetsBindingObserver {
   CameraController? _controller;
   bool _failed = false;
 
@@ -76,7 +77,8 @@ class _CameraBackdropState extends State<CameraBackdrop> with WidgetsBindingObse
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final c = _controller;
     if (c == null || !c.value.isInitialized) return;
-    if (state == AppLifecycleState.inactive || state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused) {
       c.dispose();
       _controller = null;
     } else if (state == AppLifecycleState.resumed) {
@@ -98,7 +100,8 @@ class _CameraBackdropState extends State<CameraBackdrop> with WidgetsBindingObse
     if (c != null && c.value.isInitialized) {
       final size = c.value.previewSize ?? const Size(3, 4);
       // previewSize is landscape on mobile; swap for a portrait cover fit.
-      final ratio = kIsWeb ? size.width / size.height : size.height / size.width;
+      final ratio =
+          kIsWeb ? size.width / size.height : size.height / size.width;
       feed = FittedBox(
         fit: BoxFit.cover,
         clipBehavior: Clip.hardEdge,
@@ -125,7 +128,8 @@ class _CameraBackdropState extends State<CameraBackdrop> with WidgetsBindingObse
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: <Color>[
-                for (final a in widget.veil) const Color(0xFF080C10).withValues(alpha: a),
+                for (final a in widget.veil)
+                  const Color(0xFF080C10).withValues(alpha: a),
               ],
               stops: widget.veilStops,
             ),
@@ -136,7 +140,8 @@ class _CameraBackdropState extends State<CameraBackdrop> with WidgetsBindingObse
             child: SizedBox(
               width: 22,
               height: 22,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white24),
+              child: CircularProgressIndicator(
+                  strokeWidth: 2, color: Colors.white24),
             ),
           ),
         if (widget.child != null) widget.child!,
@@ -153,7 +158,8 @@ class _StripesPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFF161B21));
+    canvas.drawRect(
+        Offset.zero & size, Paint()..color = const Color(0xFF161B21));
     final diag = math.sqrt(size.width * size.width + size.height * size.height);
     canvas.save();
     canvas.translate(size.width / 2, size.height / 2);
@@ -167,5 +173,6 @@ class _StripesPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_StripesPainter old) => old.angleDeg != angleDeg || old.width != width;
+  bool shouldRepaint(_StripesPainter old) =>
+      old.angleDeg != angleDeg || old.width != width;
 }

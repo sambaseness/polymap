@@ -1,13 +1,16 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 import '../../ar/ar_path.dart';
 import '../../ar/ar_pose.dart';
 import '../../ar/ar_scene.dart';
 import '../../data/models.dart';
+import '../../data/node_graph.dart';
 import '../../navigation.dart';
 import '../../state/app_state.dart';
 import '../../theme/pm_colors.dart';
@@ -24,8 +27,11 @@ import 'ar_widgets.dart';
 /// The route ahead is laid on the ground as a chain of 3D arrows drawn in
 /// perspective from the phone's point of view ([ArScene]); the compass and
 /// tilt sensors orient the view, drag works everywhere. Door labels are
-/// anchored in the same metric frame. Position along the route is still the
-/// demo position (see docs/AR_APPROACH.md for live positioning).
+/// anchored in the same metric frame.
+///
+/// Position is determined by QR code scans (AppState.currentNodeId →
+/// NodeGraph.findNode()), or falls back to the demo position when no
+/// QR has been scanned yet.
 class ArNavigationScreen extends StatefulWidget {
   const ArNavigationScreen({super.key});
 
@@ -33,11 +39,25 @@ class ArNavigationScreen extends StatefulWidget {
   State<ArNavigationScreen> createState() => _ArNavigationScreenState();
 }
 
+/// Scale factor: 1 LatLng degree ≈ 111km at equator.
+/// Campus is small enough that we can use a simple linear approximation.
+const double _kLatLngToOffsetScale = 100000.0;
+
+/// Convert a LatLng position to an Offset in metres relative to the
+/// campus center (approximate). Used as the AR scene origin.
+Offset latLngToOffset(LatLng latLng) {
+  return Offset(
+    (latLng.longitude - (-17.4467)) * _kLatLngToOffsetScale,
+    (latLng.latitude - 14.6904) * _kLatLngToOffsetScale,
+  );
+}
+
 class _ArNavigationScreenState extends State<ArNavigationScreen> {
   late final ArPoseController _pose;
   late ArPath _path;
   late List<ArLabel> _labels;
   late ComputedRoute _route;
+  late Offset _arOrigin = Offset.zero;
 
   @override
   void initState() {
@@ -46,7 +66,26 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> {
     _path = ArPath.fromRoute(_route);
     _labels = ArLabel.along(_path, _route.route.arLabels);
     // Without sensors, start looking down the path.
-    _pose = ArPoseController(initial: ArPose(heading: _path.initialBearing, pitch: -12));
+    _pose = ArPoseController(
+        initial: ArPose(heading: _path.initialBearing, pitch: -12));
+    // Resolve AR origin from QR scan position, or use demo position.
+    _arOrigin = _resolveArOrigin();
+  }
+
+  /// Resolve the AR origin from the current node position.
+  /// If a QR code has been scanned (currentNodeId is set), use the
+  /// node's position. Otherwise, fall back to the demo position.
+  Offset _resolveArOrigin() {
+    final appState = context.read<AppState>();
+    final nodeId = appState.currentNodeId;
+    if (nodeId != null) {
+      final node = NodeGraph.findNode(nodeId);
+      if (node != null) {
+        return latLngToOffset(node.position);
+      }
+    }
+    // Fallback: demo position (Pavillon C user position).
+    return Offset(32.5, 90);
   }
 
   @override
@@ -74,7 +113,12 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> {
         body: CameraBackdrop(
           child: Stack(
             children: <Widget>[
-              Positioned.fill(child: ArScene(path: _path, pose: _pose, labels: _labels)),
+              Positioned.fill(
+                  child: ArScene(
+                      path: _path,
+                      pose: _pose,
+                      labels: _labels,
+                      origin: _arOrigin)),
               Positioned(
                 left: 20,
                 top: pad.top + 22,
@@ -84,8 +128,14 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> {
                   eta: 'Arrivée dans $remaining min · $metersLeft m restants',
                 ),
               ),
-              Positioned(right: 20, top: pad.top + 22, child: ArExitButton(onTap: _exit)),
-              Positioned(left: 20, bottom: pad.bottom + 98, child: _SensorChip(pose: _pose)),
+              Positioned(
+                  right: 20,
+                  top: pad.top + 22,
+                  child: ArExitButton(onTap: _exit)),
+              Positioned(
+                  left: 20,
+                  bottom: pad.bottom + 98,
+                  child: _SensorChip(pose: _pose)),
               if (floor != null)
                 Positioned(
                   left: 20,
@@ -94,10 +144,14 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> {
                   top: pad.top + 122,
                   child: _FloorBanner(
                     floor: floor,
-                    onTap: () => PmNav.push<void>(context, ArFloorScreen(floor: floor)),
+                    onTap: () =>
+                        PmNav.push<void>(context, ArFloorScreen(floor: floor)),
                   ),
                 ),
-              Positioned(right: 20, bottom: pad.bottom + 98, child: _Minimap(path: _path)),
+              Positioned(
+                  right: 20,
+                  bottom: pad.bottom + 98,
+                  child: _Minimap(path: _path)),
               Positioned(
                 left: 20,
                 right: wide ? null : 20,
@@ -109,7 +163,8 @@ class _ArNavigationScreenState extends State<ArNavigationScreen> {
                       child: PmButton(
                         label: 'Je suis arrivé',
                         variant: PmButtonVariant.brand,
-                        onTap: () => PmNav.pushInShell(context, const ArrivalScreen()),
+                        onTap: () =>
+                            PmNav.pushInShell(context, const ArrivalScreen()),
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -170,11 +225,15 @@ class _SensorChip extends StatelessWidget {
                 height: 7,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: pose.sensorsActive ? const Color(0xFFA9C9A1) : PmFixed.brandOchre,
+                  color: pose.sensorsActive
+                      ? const Color(0xFFA9C9A1)
+                      : PmFixed.brandOchre,
                 ),
               ),
               const SizedBox(width: 8),
-              Text(text, style: PmText.mono(10.5, color: PmFixed.white.withValues(alpha: .85), ls: 0.04)),
+              Text(text,
+                  style: PmText.mono(10.5,
+                      color: PmFixed.white.withValues(alpha: .85), ls: 0.04)),
             ],
           ),
         );
@@ -207,8 +266,13 @@ class _FloorBanner extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(floor.title, style: PmText.sans(14, weight: FontWeight.w700, color: PmFixed.onOchre)),
-                        Text(floor.detail, style: PmText.sans(12.5, color: PmFixed.onOchre.withValues(alpha: .8))),
+                        Text(floor.title,
+                            style: PmText.sans(14,
+                                weight: FontWeight.w700,
+                                color: PmFixed.onOchre)),
+                        Text(floor.detail,
+                            style: PmText.sans(12.5,
+                                color: PmFixed.onOchre.withValues(alpha: .8))),
                       ],
                     ),
                   ),
@@ -235,7 +299,10 @@ class _Minimap extends StatelessWidget {
         color: PmFixed.arMinimapBg,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: PmFixed.white.withValues(alpha: .18)),
-        boxShadow: const <BoxShadow>[BoxShadow(color: Color(0x80000000), offset: Offset(0, 10), blurRadius: 30)],
+        boxShadow: const <BoxShadow>[
+          BoxShadow(
+              color: Color(0x80000000), offset: Offset(0, 10), blurRadius: 30)
+        ],
       ),
       child: Stack(
         children: <Widget>[
@@ -243,7 +310,9 @@ class _Minimap extends StatelessWidget {
           Positioned(
             left: 8,
             bottom: 6,
-            child: Text('RDC', style: PmText.mono(8, color: PmFixed.white.withValues(alpha: .5), ls: 0.1)),
+            child: Text('RDC',
+                style: PmText.mono(8,
+                    color: PmFixed.white.withValues(alpha: .5), ls: 0.1)),
           ),
         ],
       ),
@@ -257,12 +326,18 @@ class _MinimapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size s) {
-    canvas.drawRect(Rect.fromLTWH(0, s.height * .4, s.width, 12), Paint()..color = PmFixed.white.withValues(alpha: .07));
+    canvas.drawRect(Rect.fromLTWH(0, s.height * .4, s.width, 12),
+        Paint()..color = PmFixed.white.withValues(alpha: .07));
     final b = Paint()..color = PmFixed.arMinimapBldg;
-    for (final r in const <Rect>[Rect.fromLTWH(14, 18, 26, 22), Rect.fromLTWH(56, 20, 30, 18), Rect.fromLTWH(20, 62, 34, 24)]) {
+    for (final r in const <Rect>[
+      Rect.fromLTWH(14, 18, 26, 22),
+      Rect.fromLTWH(56, 20, 30, 18),
+      Rect.fromLTWH(20, 62, 34, 24)
+    ]) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
-          Rect.fromLTWH(r.left / 100 * s.width, r.top / 100 * s.height, r.width / 100 * s.width, r.height / 100 * s.height),
+          Rect.fromLTWH(r.left / 100 * s.width, r.top / 100 * s.height,
+              r.width / 100 * s.width, r.height / 100 * s.height),
           const Radius.circular(3),
         ),
         b,
@@ -271,7 +346,7 @@ class _MinimapPainter extends CustomPainter {
     // Remaining path, north up, walker near the bottom, ~1.4 px per metre.
     final origin = Offset(s.width * .3, s.height * .84);
     const k = 1.4;
-    final p = Path()..moveTo(origin.dx, origin.dy);
+    final p = ui.Path()..moveTo(origin.dx, origin.dy);
     for (final w in path.points.skip(1)) {
       p.lineTo(origin.dx + w.dx * k, origin.dy - w.dy * k);
     }
@@ -288,7 +363,13 @@ class _MinimapPainter extends CustomPainter {
     );
     canvas.restore();
     canvas.drawCircle(origin, 4.5, Paint()..color = PmFixed.arMinimapBlue);
-    canvas.drawCircle(origin, 3.5, Paint()..color = PmFixed.arMinimapBg..style = PaintingStyle.stroke..strokeWidth = 2);
+    canvas.drawCircle(
+        origin,
+        3.5,
+        Paint()
+          ..color = PmFixed.arMinimapBg
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2);
   }
 
   @override

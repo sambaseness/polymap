@@ -61,7 +61,8 @@ class ArFloorScreen extends StatelessWidget {
                           width: 46.0 - i * 10,
                           height: 46.0 - i * 10,
                           child: NavArrow(
-                            color: PmFixed.brandBlue.withValues(alpha: 0.95 - i * 0.28),
+                            color: PmFixed.brandBlue
+                                .withValues(alpha: 0.95 - i * 0.28),
                             size: 46.0 - i * 10,
                             thickness: 13.0 - i * 3,
                             radius: 4,
@@ -86,20 +87,31 @@ class ArFloorScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text("CHANGEMENT D'ÉTAGE",
-                          style: PmText.mono(9.5, color: PmFixed.onOchre.withValues(alpha: .7), ls: 0.16)),
+                          style: PmText.mono(9.5,
+                              color: PmFixed.onOchre.withValues(alpha: .7),
+                              ls: 0.16)),
                       const SizedBox(height: 8),
                       Row(
                         children: <Widget>[
-                          const StairsGlyph(color: PmFixed.onOchre, widths: <double>[26, 20, 14], thickness: 4, gap: 3),
+                          const StairsGlyph(
+                              color: PmFixed.onOchre,
+                              widths: <double>[26, 20, 14],
+                              thickness: 4,
+                              gap: 3),
                           const SizedBox(width: 14),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(f.stairs,
-                                  style: PmText.grotesk(25, weight: FontWeight.w700, color: PmFixed.onOchre, height: 1.05)),
+                                  style: PmText.grotesk(25,
+                                      weight: FontWeight.w700,
+                                      color: PmFixed.onOchre,
+                                      height: 1.05)),
                               const SizedBox(height: 2),
                               Text('${f.fromTo} · ${f.steps} marches',
-                                  style: PmText.sans(13.5, color: PmFixed.onOchre.withValues(alpha: .82))),
+                                  style: PmText.sans(13.5,
+                                      color: PmFixed.onOchre
+                                          .withValues(alpha: .82))),
                             ],
                           ),
                         ],
@@ -116,15 +128,23 @@ class ArFloorScreen extends StatelessWidget {
                   child: ArGlass(
                     radius: 999,
                     alpha: .78,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text('RDC', style: PmText.mono(11, color: PmFixed.white.withValues(alpha: .5))),
+                        Text('RDC',
+                            style: PmText.mono(11,
+                                color: PmFixed.white.withValues(alpha: .5))),
                         _Tick(alpha: .3),
-                        Text('R+1', style: PmText.mono(13, weight: FontWeight.w500, color: PmFixed.brandOchre)),
+                        Text('R+1',
+                            style: PmText.mono(13,
+                                weight: FontWeight.w500,
+                                color: PmFixed.brandOchre)),
                         _Tick(alpha: .14),
-                        Text('R+2', style: PmText.mono(11, color: PmFixed.white.withValues(alpha: .3))),
+                        Text('R+2',
+                            style: PmText.mono(11,
+                                color: PmFixed.white.withValues(alpha: .3))),
                       ],
                     ),
                   ),
@@ -143,10 +163,12 @@ class ArFloorScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(f.then,
-                          style: PmText.sans(13.5, weight: FontWeight.w600, color: PmFixed.white)),
+                          style: PmText.sans(13.5,
+                              weight: FontWeight.w600, color: PmFixed.white)),
                       const SizedBox(height: 3),
                       Text(f.thenDetail,
-                          style: PmText.sans(12.5, color: PmFixed.white.withValues(alpha: .62))),
+                          style: PmText.sans(12.5,
+                              color: PmFixed.white.withValues(alpha: .62))),
                     ],
                   ),
                 ),
@@ -172,7 +194,8 @@ class ArFloorScreen extends StatelessWidget {
                       child: PmButton(
                         label: 'Étage atteint',
                         variant: PmButtonVariant.brand,
-                        onTap: () => PmNav.pushInShell(context, const ArrivalScreen()),
+                        onTap: () =>
+                            PmNav.pushInShell(context, const ArrivalScreen()),
                       ),
                     ),
                   ],

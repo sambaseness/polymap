@@ -40,7 +40,8 @@ class ArPath {
 
   /// Compass bearing (0 = north, clockwise) of segment [i] → [i+1].
   double bearingAt(int i) {
-    final d = points[math.min(i + 1, points.length - 1)] - points[math.min(i, points.length - 2)];
+    final d = points[math.min(i + 1, points.length - 1)] -
+        points[math.min(i, points.length - 2)];
     return _bearing(d);
   }
 
@@ -48,7 +49,8 @@ class ArPath {
 
   /// Arrows laid on the ground along the path: the first [first] metres
   /// ahead, then every [spacing] metres, up to [count] arrows.
-  List<ArArrowPlacement> arrows({double first = 1.8, double spacing = 2.4, int count = 7}) {
+  List<ArArrowPlacement> arrows(
+      {double first = 1.8, double spacing = 2.4, int count = 7}) {
     final out = <ArArrowPlacement>[];
     var seg = 0;
     var segStart = 0.0;
@@ -63,7 +65,8 @@ class ArPath {
       }
       final t = segLen < 1e-6 ? 0.0 : (target - segStart) / segLen;
       final pos = Offset.lerp(points[seg], points[seg + 1], t)!;
-      out.add(ArArrowPlacement(pos: pos, bearing: bearingAt(seg), distance: target, index: k));
+      out.add(ArArrowPlacement(
+          pos: pos, bearing: bearingAt(seg), distance: target, index: k));
     }
     return out;
   }
@@ -72,7 +75,8 @@ class ArPath {
   ArGuidance guidance() {
     final toNext = (points[1] - points[0]).distance;
     if (points.length < 3) {
-      return ArGuidance(distance: toNext, turn: ArTurn.arrive, bearing: bearingAt(0));
+      return ArGuidance(
+          distance: toNext, turn: ArTurn.arrive, bearing: bearingAt(0));
     }
     final delta = _shortest(bearingAt(1) - bearingAt(0));
     final turn = delta.abs() < 20
@@ -83,12 +87,17 @@ class ArPath {
     return ArGuidance(distance: toNext, turn: turn, bearing: bearingAt(0));
   }
 
-  static double _bearing(Offset d) => (math.atan2(d.dx, d.dy) * 180 / math.pi + 360) % 360;
+  static double _bearing(Offset d) =>
+      (math.atan2(d.dx, d.dy) * 180 / math.pi + 360) % 360;
   static double _shortest(double deg) => ((deg + 540) % 360) - 180;
 }
 
 class ArArrowPlacement {
-  const ArArrowPlacement({required this.pos, required this.bearing, required this.distance, required this.index});
+  const ArArrowPlacement(
+      {required this.pos,
+      required this.bearing,
+      required this.distance,
+      required this.index});
   final Offset pos;
   final double bearing;
 
@@ -108,7 +117,8 @@ enum ArTurn {
 }
 
 class ArGuidance {
-  const ArGuidance({required this.distance, required this.turn, required this.bearing});
+  const ArGuidance(
+      {required this.distance, required this.turn, required this.bearing});
   final double distance;
   final ArTurn turn;
 
@@ -120,7 +130,11 @@ class ArGuidance {
 
 /// A billboard label anchored in the world (door codes, landmarks).
 class ArLabel {
-  const ArLabel({required this.text, required this.tint, required this.pos, this.height = 1.7});
+  const ArLabel(
+      {required this.text,
+      required this.tint,
+      required this.pos,
+      this.height = 1.7});
   final String text;
   final PmTint tint;
 

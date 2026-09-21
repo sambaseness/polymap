@@ -128,7 +128,8 @@ class PmSectionLabel extends StatelessWidget {
         padding: EdgeInsets.only(bottom: bottom),
         child: Text(
           text.toUpperCase(),
-          style: PmText.monoMeta(color: color ?? context.pm.ink2, size: size, ls: ls),
+          style: PmText.monoMeta(
+              color: color ?? context.pm.ink2, size: size, ls: ls),
         ),
       );
 }
@@ -274,7 +275,8 @@ class _Pill extends StatelessWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 36),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 6),
+            padding:
+                EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 6),
             child: Center(
               child: Text(
                 label,
@@ -353,7 +355,8 @@ class PmRadioDot extends StatelessWidget {
           ? Padding(
               padding: const EdgeInsets.all(3),
               child: DecoratedBox(
-                decoration: BoxDecoration(color: pm.blue, shape: BoxShape.circle),
+                decoration:
+                    BoxDecoration(color: pm.blue, shape: BoxShape.circle),
               ),
             )
           : null,
@@ -440,7 +443,8 @@ class PmTagBox extends StatelessWidget {
       child: Text(
         text,
         maxLines: 1,
-        style: PmText.mono(fontSize, weight: FontWeight.w500, color: foreground ?? pm.brown),
+        style: PmText.mono(fontSize,
+            weight: FontWeight.w500, color: foreground ?? pm.brown),
       ),
     );
   }
@@ -457,14 +461,19 @@ class PmStatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final pm = context.pm;
     final (label, bg, fg) = switch (status) {
-      PmStatus.free => ('Libre', pm.green, pm.isDark ? pm.ink : PmFixed.onGreen),
+      PmStatus.free => (
+          'Libre',
+          pm.green,
+          pm.isDark ? pm.ink : PmFixed.onGreen
+        ),
       PmStatus.busy => ('Occupée', pm.brown, PmFixed.white),
       PmStatus.closed => ('Accès fermé', pm.ochre, PmFixed.onOchre),
     };
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
       decoration: BoxDecoration(color: bg, borderRadius: PmRadius.pill),
-      child: Text(label, style: PmText.sans(12, weight: FontWeight.w600, color: fg)),
+      child: Text(label,
+          style: PmText.sans(12, weight: FontWeight.w600, color: fg)),
     );
   }
 }
@@ -473,5 +482,6 @@ class PmStatusBadge extends StatelessWidget {
 class PmDivider extends StatelessWidget {
   const PmDivider({super.key});
   @override
-  Widget build(BuildContext context) => Container(height: 1, color: context.pm.line);
+  Widget build(BuildContext context) =>
+      Container(height: 1, color: context.pm.line);
 }

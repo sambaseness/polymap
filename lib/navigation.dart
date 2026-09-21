@@ -86,5 +86,6 @@ abstract final class PmNav {
       push<void>(context, const BuildingScreen());
 
   static MaterialPageRoute<T> _route<T>(Widget page, {String? name}) =>
-      MaterialPageRoute<T>(builder: (_) => page, settings: RouteSettings(name: name));
+      MaterialPageRoute<T>(
+          builder: (_) => page, settings: RouteSettings(name: name));
 }

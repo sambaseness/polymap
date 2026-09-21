@@ -17,11 +17,15 @@ ArPoseSource createPoseSource() => _SensorPoseSource();
 
 class _SensorPoseSource extends ArPoseSource {
   _SensorPoseSource() {
-    _accSub = accelerometerEventStream(samplingPeriod: SensorInterval.gameInterval).listen(
+    _accSub =
+        accelerometerEventStream(samplingPeriod: SensorInterval.gameInterval)
+            .listen(
       (e) => _onAccel(e.x, e.y, e.z),
       onError: (Object e) => debugPrint('AR: accelerometer unavailable ($e)'),
     );
-    _magSub = magnetometerEventStream(samplingPeriod: SensorInterval.gameInterval).listen(
+    _magSub =
+        magnetometerEventStream(samplingPeriod: SensorInterval.gameInterval)
+            .listen(
       (e) => _onMag(e.x, e.y, e.z),
       onError: (Object e) => debugPrint('AR: magnetometer unavailable ($e)'),
     );
@@ -67,13 +71,17 @@ class _SensorPoseSource extends ArPoseSource {
     double east = 0, north = 1;
     if (_hasMag) {
       // E = m × g ; N = g × E
-      var ex = _my * gz - _mz * gy, ey = _mz * gx - _mx * gz, ez = _mx * gy - _my * gx;
+      var ex = _my * gz - _mz * gy,
+          ey = _mz * gx - _mx * gz,
+          ez = _mx * gy - _my * gx;
       final eLen = math.sqrt(ex * ex + ey * ey + ez * ez);
       if (eLen > 1e-6) {
         ex /= eLen;
         ey /= eLen;
         ez /= eLen;
-        final nx = gy * ez - gz * ey, ny = gz * ex - gx * ez, nz = gx * ey - gy * ex;
+        final nx = gy * ez - gz * ey,
+            ny = gz * ex - gx * ez,
+            nz = gx * ey - gy * ex;
         east = fx * ex + fy * ey + fz * ez;
         north = fx * nx + fy * ny + fz * nz;
       }

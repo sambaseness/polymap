@@ -34,7 +34,10 @@ class QrScreen extends StatelessWidget {
             children: <Widget>[
               Align(
                 alignment: const Alignment(0, -0.2),
-                child: SizedBox(width: 214, height: 214, child: CustomPaint(painter: _ViewfinderPainter())),
+                child: SizedBox(
+                    width: 214,
+                    height: 214,
+                    child: CustomPaint(painter: _ViewfinderPainter())),
               ),
               Positioned(
                 left: 24,
@@ -48,7 +51,8 @@ class QrScreen extends StatelessWidget {
                       onTap: () => Navigator.of(context).maybePop(),
                     ),
                     const SizedBox(width: 12),
-                    Text('Me localiser', style: PmText.grotesk(18, color: PmFixed.white)),
+                    Text('Me localiser',
+                        style: PmText.grotesk(18, color: PmFixed.white)),
                   ],
                 ),
               ),
@@ -60,18 +64,22 @@ class QrScreen extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     Text('Scannez le QR code de la porte',
-                        style: PmText.sans(15, weight: FontWeight.w600, color: PmFixed.white)),
+                        style: PmText.sans(15,
+                            weight: FontWeight.w600, color: PmFixed.white)),
                     const SizedBox(height: 8),
                     Text(
                       "Chaque entrée de bâtiment porte un code. Utile à l'intérieur, là où le GPS est imprécis.",
                       textAlign: TextAlign.center,
-                      style: PmText.sans(13, color: PmFixed.white.withValues(alpha: 0.66), height: 1.5),
+                      style: PmText.sans(13,
+                          color: PmFixed.white.withValues(alpha: 0.66),
+                          height: 1.5),
                     ),
                     const SizedBox(height: 18),
                     PmButton(
                       label: 'Saisir le code manuellement',
                       variant: PmButtonVariant.glass,
-                      onTap: () => PmNav.pushInShell(context, const BuildingScreen()),
+                      onTap: () =>
+                          PmNav.pushInShell(context, const BuildingScreen()),
                     ),
                   ],
                 ),
@@ -95,13 +103,33 @@ class _ViewfinderPainter extends CustomPainter {
       ..strokeWidth = 3;
     final w = size.width, h = size.height;
     void corner(Path path) => canvas.drawPath(path, p);
-    corner(Path()..moveTo(0, len)..lineTo(0, r)..arcToPoint(const Offset(r, 0), radius: const Radius.circular(r))..lineTo(len, 0));
-    corner(Path()..moveTo(w - len, 0)..lineTo(w - r, 0)..arcToPoint(Offset(w, r), radius: const Radius.circular(r))..lineTo(w, len));
-    corner(Path()..moveTo(w, h - len)..lineTo(w, h - r)..arcToPoint(Offset(w - r, h), radius: const Radius.circular(r))..lineTo(w - len, h));
-    corner(Path()..moveTo(len, h)..lineTo(r, h)..arcToPoint(Offset(0, h - r), radius: const Radius.circular(r))..lineTo(0, h - len));
+    corner(Path()
+      ..moveTo(0, len)
+      ..lineTo(0, r)
+      ..arcToPoint(const Offset(r, 0), radius: const Radius.circular(r))
+      ..lineTo(len, 0));
+    corner(Path()
+      ..moveTo(w - len, 0)
+      ..lineTo(w - r, 0)
+      ..arcToPoint(Offset(w, r), radius: const Radius.circular(r))
+      ..lineTo(w, len));
+    corner(Path()
+      ..moveTo(w, h - len)
+      ..lineTo(w, h - r)
+      ..arcToPoint(Offset(w - r, h), radius: const Radius.circular(r))
+      ..lineTo(w - len, h));
+    corner(Path()
+      ..moveTo(len, h)
+      ..lineTo(r, h)
+      ..arcToPoint(Offset(0, h - r), radius: const Radius.circular(r))
+      ..lineTo(0, h - len));
 
     final line = Rect.fromLTWH(w * .1, h / 2 - 1, w * .8, 2);
-    canvas.drawRect(line, Paint()..color = PmFixed.brandOchre..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7));
+    canvas.drawRect(
+        line,
+        Paint()
+          ..color = PmFixed.brandOchre
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 7));
     canvas.drawRect(line, Paint()..color = PmFixed.brandOchre);
   }
 

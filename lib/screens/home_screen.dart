@@ -42,7 +42,11 @@ class HomeScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: <Widget>[
           map,
-          Positioned(top: top + 12, left: 16, right: 16, child: const _SearchRow(elevated: true)),
+          Positioned(
+              top: top + 12,
+              left: 16,
+              right: 16,
+              child: const _SearchRow(elevated: true)),
           const Positioned(left: 0, right: 0, bottom: 0, child: _Sheet()),
         ],
       ),
@@ -132,8 +136,11 @@ class _Destinations extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
           children: <Widget>[
-            Expanded(child: Text('Où allez-vous ?', style: PmText.grotesk(19, color: pm.ink))),
-            Text('ESP · FANN', style: PmText.mono(10.5, color: pm.ink2, ls: 0.06)),
+            Expanded(
+                child: Text('Où allez-vous ?',
+                    style: PmText.grotesk(19, color: pm.ink))),
+            Text('ESP · FANN',
+                style: PmText.mono(10.5, color: pm.ink2, ls: 0.06)),
           ],
         ),
         const SizedBox(height: 14),
@@ -152,7 +159,8 @@ class _Destinations extends StatelessWidget {
             child: InkWell(
               onTap: () => PmNav.push<void>(context, const DirectoryScreen()),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                 child: Row(
                   children: <Widget>[
                     Expanded(
@@ -183,7 +191,8 @@ class _Sheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: pm.surf,
         border: Border(top: BorderSide(color: pm.line)),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(PmRadius.sheet)),
+        borderRadius:
+            const BorderRadius.vertical(top: Radius.circular(PmRadius.sheet)),
         boxShadow: PmShadow.sheet(pm),
       ),
       child: Column(
@@ -195,7 +204,8 @@ class _Sheet extends StatelessWidget {
               width: 42,
               height: 4,
               margin: const EdgeInsets.only(bottom: 16),
-              decoration: BoxDecoration(color: pm.line, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(
+                  color: pm.line, borderRadius: BorderRadius.circular(2)),
             ),
           ),
           const _Destinations(),
@@ -254,8 +264,13 @@ class _QuickRoute extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(r.to, maxLines: 1, overflow: TextOverflow.ellipsis, style: PmText.label(color: pm.ink)),
-                Text('depuis ${r.from}', maxLines: 1, overflow: TextOverflow.ellipsis,
+                Text(r.to,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: PmText.label(color: pm.ink)),
+                Text('depuis ${r.from}',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: PmText.sans(11.5, color: pm.ink2)),
               ],
             ),

@@ -37,7 +37,9 @@ class RoomScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Padding(padding: EdgeInsets.only(bottom: 14), child: PmBackButton(size: 32)),
+                  const Padding(
+                      padding: EdgeInsets.only(bottom: 14),
+                      child: PmBackButton(size: 32)),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
@@ -45,11 +47,16 @@ class RoomScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            const PmSectionLabel('Pavillon C · 1er étage', bottom: 6),
+                            const PmSectionLabel('Pavillon C · 1er étage',
+                                bottom: 6),
                             Text('Salle $code',
-                                style: PmText.grotesk(30, weight: FontWeight.w700, color: pm.ink, ls: -0.02)),
+                                style: PmText.grotesk(30,
+                                    weight: FontWeight.w700,
+                                    color: pm.ink,
+                                    ls: -0.02)),
                             const SizedBox(height: 2),
-                            Text('Salle de travaux dirigés', style: PmText.sans(14, color: pm.ink2)),
+                            Text('Salle de travaux dirigés',
+                                style: PmText.sans(14, color: pm.ink2)),
                           ],
                         ),
                       ),
@@ -66,7 +73,11 @@ class RoomScreen extends StatelessWidget {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      for (final (i, (k, v)) in const <(String, String)>[('Capacité', '32 places'), ('Étage', 'R+1'), ('Libre', '1h20')].indexed) ...<Widget>[
+                      for (final (i, (k, v)) in const <(String, String)>[
+                        ('Capacité', '32 places'),
+                        ('Étage', 'R+1'),
+                        ('Libre', '1h20')
+                      ].indexed) ...<Widget>[
                         if (i > 0) const SizedBox(width: 10),
                         Expanded(
                           child: PmCard(
@@ -78,7 +89,9 @@ class RoomScreen extends StatelessWidget {
                                 FittedBox(
                                   fit: BoxFit.scaleDown,
                                   alignment: Alignment.centerLeft,
-                                  child: Text(v, maxLines: 1, style: PmText.grotesk(19, color: pm.ink)),
+                                  child: Text(v,
+                                      maxLines: 1,
+                                      style: PmText.grotesk(19, color: pm.ink)),
                                 ),
                               ],
                             ),
@@ -88,16 +101,22 @@ class RoomScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  const PmSectionLabel('Équipement', size: 9.5, ls: 0.14, bottom: 9),
+                  const PmSectionLabel('Équipement',
+                      size: 9.5, ls: 0.14, bottom: 9),
                   Wrap(
                     spacing: 7,
                     runSpacing: 7,
                     children: <Widget>[
                       for (final e in CampusData.roomEquipment)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                          decoration: BoxDecoration(color: pm.surf2, borderRadius: BorderRadius.circular(999)),
-                          child: Text(e, style: PmText.sans(12.5, weight: FontWeight.w500, color: pm.ink)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                              color: pm.surf2,
+                              borderRadius: BorderRadius.circular(999)),
+                          child: Text(e,
+                              style: PmText.sans(12.5,
+                                  weight: FontWeight.w500, color: pm.ink)),
                         ),
                     ],
                   ),
@@ -107,8 +126,11 @@ class RoomScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        const PmSectionLabel('Prochaines occupations', size: 9.5, ls: 0.14, bottom: 12),
-                        for (var i = 0; i < CampusData.todaySchedule.length; i++) ...<Widget>[
+                        const PmSectionLabel('Prochaines occupations',
+                            size: 9.5, ls: 0.14, bottom: 12),
+                        for (var i = 0;
+                            i < CampusData.todaySchedule.length;
+                            i++) ...<Widget>[
                           if (i > 0) const SizedBox(height: 11),
                           OccupationRow(course: CampusData.todaySchedule[i]),
                         ],
@@ -133,11 +155,14 @@ class RoomScreen extends StatelessWidget {
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: InkWell(
-                        onTap: () => context.read<AppState>().toggleFavorite(code),
+                        onTap: () =>
+                            context.read<AppState>().toggleFavorite(code),
                         child: SizedBox(
                           width: 52,
                           height: 52,
-                          child: Center(child: DiamondGlyph(color: pm.ochre, size: 14, filled: fav)),
+                          child: Center(
+                              child: DiamondGlyph(
+                                  color: pm.ochre, size: 14, filled: fav)),
                         ),
                       ),
                     ),
@@ -172,7 +197,9 @@ class OccupationRow extends StatelessWidget {
     return IntrinsicHeight(
       child: Row(
         children: <Widget>[
-          SizedBox(width: timeWidth, child: Text(course.time, style: PmText.mono(12, color: pm.ink2))),
+          SizedBox(
+              width: timeWidth,
+              child: Text(course.time, style: PmText.mono(12, color: pm.ink2))),
           const SizedBox(width: 13),
           Container(
             width: 3,
@@ -186,7 +213,9 @@ class OccupationRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(course.title, style: PmText.sans(13.5, weight: FontWeight.w600, color: pm.ink)),
+                Text(course.title,
+                    style: PmText.sans(13.5,
+                        weight: FontWeight.w600, color: pm.ink)),
                 Text(course.who, style: PmText.sans(11.5, color: pm.ink2)),
               ],
             ),

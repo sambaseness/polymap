@@ -60,9 +60,8 @@ abstract final class PmTheme {
         backgroundColor: pm.bg,
         foregroundColor: pm.ink,
         elevation: 0,
-        systemOverlayStyle: pm.isDark
-            ? SystemUiOverlayStyle.light
-            : SystemUiOverlayStyle.dark,
+        systemOverlayStyle:
+            pm.isDark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       ),
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: <TargetPlatform, PageTransitionsBuilder>{

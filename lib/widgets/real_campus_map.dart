@@ -64,7 +64,8 @@ class _RealCampusMapState extends State<RealCampusMap> {
         minZoom: 15.0,
         maxZoom: 19.0,
         onMapReady: () {},
-        onTap: (_, __) => _mapController.move(_mapController.camera.center, _mapController.camera.zoom),
+        onTap: (_, __) => _mapController.move(
+            _mapController.camera.center, _mapController.camera.zoom),
       ),
       children: [
         // OpenStreetMap tiles

@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 
 Widget _app(Widget home, {AppState? state}) => ChangeNotifierProvider<AppState>(
       create: (_) => state ?? AppState(),
-      child: MaterialApp(theme: PmTheme.light(), darkTheme: PmTheme.dark(), home: home),
+      child: MaterialApp(
+          theme: PmTheme.light(), darkTheme: PmTheme.dark(), home: home),
     );
 
 void main() {
@@ -36,16 +37,25 @@ void main() {
   });
 
   group('search', () {
-    test('« salle 204 » returns the four design results, accent-insensitive', () {
-      final hits = CampusData.places.where((p) => p.matches('salle 204')).map((p) => p.name).toList();
-      expect(hits, containsAll(<String>['Salle 204', 'Labo LER 2.04', 'Amphi 204 places']));
-      expect(CampusData.places.where((p) => p.matches('bibliotheque')).length, 1);
+    test('« salle 204 » returns the four design results, accent-insensitive',
+        () {
+      final hits = CampusData.places
+          .where((p) => p.matches('salle 204'))
+          .map((p) => p.name)
+          .toList();
+      expect(
+          hits,
+          containsAll(
+              <String>['Salle 204', 'Labo LER 2.04', 'Amphi 204 places']));
+      expect(
+          CampusData.places.where((p) => p.matches('bibliotheque')).length, 1);
       expect(CampusData.places.where((p) => p.matches('amphi 700')), isEmpty);
     });
   });
 
   group('screens', () {
-    testWidgets('home shell renders map sheet and switches tabs', (tester) async {
+    testWidgets('home shell renders map sheet and switches tabs',
+        (tester) async {
       tester.view.physicalSize = const Size(402, 874);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
@@ -64,7 +74,8 @@ void main() {
       expect(find.text('Réglages'), findsOneWidget);
     });
 
-    testWidgets('search shows recents, results, then the empty state', (tester) async {
+    testWidgets('search shows recents, results, then the empty state',
+        (tester) async {
       tester.view.physicalSize = const Size(402, 874);
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);

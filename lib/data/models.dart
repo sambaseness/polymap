@@ -51,7 +51,8 @@ enum RouteMode {
 /// A door / landmark label shown in AR, placed [along] metres down the path
 /// and [side] metres to the right of it (negative = left).
 class RouteLabel {
-  const RouteLabel(this.text, this.tint, {required this.along, required this.side});
+  const RouteLabel(this.text, this.tint,
+      {required this.along, required this.side});
   final String text;
   final PmTint tint;
   final double along;
@@ -135,7 +136,8 @@ class CampusRoute {
     if (mode == RouteMode.accessible) {
       list.insert(
         list.length - 1,
-        const RouteStep('↗', "Rampe d'accès — contournement de l'escalier", '70 m'),
+        const RouteStep(
+            '↗', "Rampe d'accès — contournement de l'escalier", '70 m'),
       );
     } else if (mode == RouteMode.shortest && list.length > 1) {
       list.removeAt(1);

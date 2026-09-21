@@ -26,7 +26,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  late final TextEditingController _ctrl = TextEditingController(text: widget.initialQuery);
+  late final TextEditingController _ctrl =
+      TextEditingController(text: widget.initialQuery);
   late List<Place> _recents = List<Place>.of(CampusData.recents);
 
   @override
@@ -63,7 +64,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       decoration: BoxDecoration(
                         color: pm.surf,
                         borderRadius: BorderRadius.circular(13),
-                        border: Border.all(color: none ? pm.brown : pm.blue, width: 1.5),
+                        border: Border.all(
+                            color: none ? pm.brown : pm.blue, width: 1.5),
                       ),
                       child: TextField(
                         controller: _ctrl,
@@ -85,7 +87,8 @@ class _SearchScreenState extends State<SearchScreen> {
               child: switch ((query.isEmpty, none)) {
                 (true, _) => _Recents(
                     recents: _recents,
-                    onRemove: (p) => setState(() => _recents = _recents.where((r) => r != p).toList()),
+                    onRemove: (p) => setState(() =>
+                        _recents = _recents.where((r) => r != p).toList()),
                   ),
                 (false, false) => _Results(results: results),
                 (false, true) => _NoResults(query: query),
@@ -106,7 +109,8 @@ class _Results extends StatelessWidget {
   Widget build(BuildContext context) {
     final n = results.length;
     return ListView(
-      padding: EdgeInsets.fromLTRB(16, 0, 16, MediaQuery.paddingOf(context).bottom + 16),
+      padding: EdgeInsets.fromLTRB(
+          16, 0, 16, MediaQuery.paddingOf(context).bottom + 16),
       children: <Widget>[
         PmSectionLabel('$n résultat${n > 1 ? 's' : ''}', ls: 0.14),
         for (var i = 0; i < results.length; i++) ...<Widget>[
@@ -133,20 +137,25 @@ class _Recents extends StatelessWidget {
   Widget build(BuildContext context) {
     final pm = context.pm;
     return ListView(
-      padding: EdgeInsets.fromLTRB(18, 4, 18, MediaQuery.paddingOf(context).bottom + 16),
+      padding: EdgeInsets.fromLTRB(
+          18, 4, 18, MediaQuery.paddingOf(context).bottom + 16),
       children: <Widget>[
-        if (recents.isNotEmpty) const PmSectionLabel('Recherches récentes', ls: 0.14),
+        if (recents.isNotEmpty)
+          const PmSectionLabel('Recherches récentes', ls: 0.14),
         for (final r in recents)
           InkWell(
             onTap: () => PmNav.openTarget(context, r.target),
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 13),
-              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: pm.line))),
+              decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: pm.line))),
               child: Row(
                 children: <Widget>[
                   CircleGlyph(color: pm.ink2, size: 16, stroke: 1.5),
                   const SizedBox(width: 13),
-                  Expanded(child: Text(r.name, style: PmText.sans(14, color: pm.ink))),
+                  Expanded(
+                      child:
+                          Text(r.name, style: PmText.sans(14, color: pm.ink))),
                   Semantics(
                     button: true,
                     label: 'Retirer',
@@ -174,7 +183,8 @@ class _Recents extends StatelessWidget {
                 label: c,
                 fontSize: 13,
                 weight: FontWeight.w500,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                 onTap: () => PmNav.push<void>(context, const DirectoryScreen()),
               ),
           ],
@@ -192,7 +202,8 @@ class _NoResults extends StatelessWidget {
   Widget build(BuildContext context) {
     final pm = context.pm;
     return ListView(
-      padding: EdgeInsets.fromLTRB(18, 28, 18, MediaQuery.paddingOf(context).bottom + 16),
+      padding: EdgeInsets.fromLTRB(
+          18, 28, 18, MediaQuery.paddingOf(context).bottom + 16),
       children: <Widget>[
         Center(
           child: Container(
@@ -205,10 +216,15 @@ class _NoResults extends StatelessWidget {
               border: Border.all(color: pm.line),
               borderRadius: BorderRadius.circular(24),
             ),
-            child: SizedBox(width: 26, height: 26, child: CustomPaint(painter: _NotFoundPainter(pm.ink2))),
+            child: SizedBox(
+                width: 26,
+                height: 26,
+                child: CustomPaint(painter: _NotFoundPainter(pm.ink2))),
           ),
         ),
-        Text('Aucun lieu trouvé', textAlign: TextAlign.center, style: PmText.grotesk(20, color: pm.ink)),
+        Text('Aucun lieu trouvé',
+            textAlign: TextAlign.center,
+            style: PmText.grotesk(20, color: pm.ink)),
         const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -252,7 +268,8 @@ class _NotFoundPainter extends CustomPainter {
     canvas.drawOval((Offset.zero & size).deflate(1.25), p);
     final c = size.center(Offset.zero);
     const half = 11.0;
-    final d = Offset(half * math.cos(math.pi / 4), half * math.sin(math.pi / 4));
+    final d =
+        Offset(half * math.cos(math.pi / 4), half * math.sin(math.pi / 4));
     canvas.drawLine(c - d, c + d, p);
   }
 

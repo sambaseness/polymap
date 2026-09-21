@@ -39,7 +39,12 @@ abstract final class NodeGraph {
       floor: 0,
       name: 'Couloir RDC - Milieu',
       position: const LatLng(14.69044, -17.44666),
-      connections: ['C-RDC-CORRIDOR-1', 'C-RDC-001', 'C-RDC-002', 'C-RDC-CORRIDOR-3'],
+      connections: [
+        'C-RDC-CORRIDOR-1',
+        'C-RDC-001',
+        'C-RDC-002',
+        'C-RDC-CORRIDOR-3'
+      ],
       type: NodeType.corridor,
     ),
     Node(
@@ -122,7 +127,12 @@ abstract final class NodeGraph {
       floor: 1,
       name: 'Couloir R+1 - Milieu',
       position: const LatLng(14.69044, -17.44666),
-      connections: ['C-R1-CORRIDOR-1', 'C-R1-101', 'C-R1-102', 'C-R1-CORRIDOR-3'],
+      connections: [
+        'C-R1-CORRIDOR-1',
+        'C-R1-101',
+        'C-R1-102',
+        'C-R1-CORRIDOR-3'
+      ],
       type: NodeType.corridor,
     ),
     Node(
@@ -205,7 +215,12 @@ abstract final class NodeGraph {
       floor: 2,
       name: 'Couloir R+2 - Milieu',
       position: const LatLng(14.69044, -17.44666),
-      connections: ['C-R2-CORRIDOR-1', 'C-R2-201', 'C-R2-203', 'C-R2-CORRIDOR-3'],
+      connections: [
+        'C-R2-CORRIDOR-1',
+        'C-R2-201',
+        'C-R2-203',
+        'C-R2-CORRIDOR-3'
+      ],
       type: NodeType.corridor,
     ),
     Node(
@@ -300,7 +315,9 @@ abstract final class NodeGraph {
 
   /// Find all nodes on a specific floor of a building.
   static List<Node> nodesOnFloor(String building, int floor) {
-    return nodes.where((n) => n.building == building && n.floor == floor).toList();
+    return nodes
+        .where((n) => n.building == building && n.floor == floor)
+        .toList();
   }
 
   /// Calculate distance between two nodes in meters.

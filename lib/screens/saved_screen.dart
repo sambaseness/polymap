@@ -23,9 +23,12 @@ class SavedScreen extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.fromLTRB(22, pad.top + 22, 22, 24),
         children: <Widget>[
-          Text('Mes lieux', style: PmText.grotesk(28, weight: FontWeight.w700, color: pm.ink, ls: -0.02)),
+          Text('Mes lieux',
+              style: PmText.grotesk(28,
+                  weight: FontWeight.w700, color: pm.ink, ls: -0.02)),
           const SizedBox(height: 2),
-          Text('Favoris et cours du jour', style: PmText.sans(13, color: pm.ink2)),
+          Text('Favoris et cours du jour',
+              style: PmText.sans(13, color: pm.ink2)),
           const SizedBox(height: 18),
           for (var i = 0; i < CampusData.favorites.length; i++) ...<Widget>[
             if (i > 0) const SizedBox(height: 8),
@@ -38,7 +41,8 @@ class SavedScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: DiamondGlyph(color: pm.ochre, size: 14),
               ),
-              onTap: () => PmNav.openTarget(context, CampusData.favorites[i].target),
+              onTap: () =>
+                  PmNav.openTarget(context, CampusData.favorites[i].target),
             ),
           ],
           const SizedBox(height: 24),
@@ -46,10 +50,13 @@ class SavedScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: <Widget>[
-              const Expanded(child: PmSectionLabel('Emploi du temps · mardi', bottom: 0)),
+              const Expanded(
+                  child: PmSectionLabel('Emploi du temps · mardi', bottom: 0)),
               InkWell(
                 onTap: () => PmNav.push<void>(context, const ScheduleScreen()),
-                child: Text('Tout voir', style: PmText.sans(12.5, weight: FontWeight.w600, color: pm.blue)),
+                child: Text('Tout voir',
+                    style: PmText.sans(12.5,
+                        weight: FontWeight.w600, color: pm.blue)),
               ),
             ],
           ),
@@ -62,7 +69,8 @@ class SavedScreen extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(
                     width: 78,
-                    child: Text(CampusData.todaySchedule[i].time, style: PmText.mono(12, color: pm.ink2)),
+                    child: Text(CampusData.todaySchedule[i].time,
+                        style: PmText.mono(12, color: pm.ink2)),
                   ),
                   const SizedBox(width: 13),
                   Expanded(
@@ -70,10 +78,14 @@ class SavedScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(CampusData.todaySchedule[i].title,
-                            maxLines: 1, overflow: TextOverflow.ellipsis,
-                            style: PmText.sans(13.5, weight: FontWeight.w600, color: pm.ink)),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: PmText.sans(13.5,
+                                weight: FontWeight.w600, color: pm.ink)),
                         Text(CampusData.todaySchedule[i].room,
-                            maxLines: 1, overflow: TextOverflow.ellipsis, style: PmText.sans(11.5, color: pm.ink2)),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: PmText.sans(11.5, color: pm.ink2)),
                       ],
                     ),
                   ),

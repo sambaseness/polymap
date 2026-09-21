@@ -21,10 +21,30 @@ class SettingsScreen extends StatelessWidget {
     final state = context.watch<AppState>();
 
     final toggles = <(String, String, bool, ValueChanged<bool>)>[
-      ('Éviter les escaliers', 'Privilégie rampes et ascenseurs', state.avoidStairs, (v) => state.setPref(() => state.avoidStairs = v)),
-      ('Étiquettes AR sur les portes', 'Affiche le code des salles en réalité augmentée', state.arDoorLabels, (v) => state.setPref(() => state.arDoorLabels = v)),
-      ('Guidage vocal', 'Annonce les virages à voix haute', state.voiceGuidance, (v) => state.setPref(() => state.voiceGuidance = v)),
-      ('Contraste élevé', 'Renforce le tracé et les textes', state.highContrast, (v) => state.setPref(() => state.highContrast = v)),
+      (
+        'Éviter les escaliers',
+        'Privilégie rampes et ascenseurs',
+        state.avoidStairs,
+        (v) => state.setPref(() => state.avoidStairs = v)
+      ),
+      (
+        'Étiquettes AR sur les portes',
+        'Affiche le code des salles en réalité augmentée',
+        state.arDoorLabels,
+        (v) => state.setPref(() => state.arDoorLabels = v)
+      ),
+      (
+        'Guidage vocal',
+        'Annonce les virages à voix haute',
+        state.voiceGuidance,
+        (v) => state.setPref(() => state.voiceGuidance = v)
+      ),
+      (
+        'Contraste élevé',
+        'Renforce le tracé et les textes',
+        state.highContrast,
+        (v) => state.setPref(() => state.highContrast = v)
+      ),
     ];
 
     return Scaffold(
@@ -47,7 +67,11 @@ class SettingsScreen extends StatelessWidget {
                         Text('Thème', style: PmText.label(color: pm.ink)),
                         const SizedBox(height: 10),
                         PmSegmented<ThemeMode>(
-                          values: const <ThemeMode>[ThemeMode.light, ThemeMode.dark, ThemeMode.system],
+                          values: const <ThemeMode>[
+                            ThemeMode.light,
+                            ThemeMode.dark,
+                            ThemeMode.system
+                          ],
                           selected: state.themeMode,
                           labelOf: (m) => switch (m) {
                             ThemeMode.light => 'Clair',
@@ -67,15 +91,27 @@ class SettingsScreen extends StatelessWidget {
                     clip: true,
                     child: Column(
                       children: <Widget>[
-                        for (final l in const <String>['Français', 'English', 'Wolof (bientôt)'])
+                        for (final l in const <String>[
+                          'Français',
+                          'English',
+                          'Wolof (bientôt)'
+                        ])
                           InkWell(
-                            onTap: l.contains('bientôt') ? null : () => state.language = l,
+                            onTap: l.contains('bientôt')
+                                ? null
+                                : () => state.language = l,
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
-                              decoration: BoxDecoration(border: Border(bottom: BorderSide(color: pm.line))),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 14),
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                      bottom: BorderSide(color: pm.line))),
                               child: Row(
                                 children: <Widget>[
-                                  Expanded(child: Text(l, style: PmText.sans(14, color: pm.ink))),
+                                  Expanded(
+                                      child: Text(l,
+                                          style:
+                                              PmText.sans(14, color: pm.ink))),
                                   PmRadioDot(selected: state.language == l),
                                 ],
                               ),
@@ -93,17 +129,26 @@ class SettingsScreen extends StatelessWidget {
                       children: <Widget>[
                         for (final (label, hint, on, set) in toggles)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
-                            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: pm.line))),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 14),
+                            decoration: BoxDecoration(
+                                border:
+                                    Border(bottom: BorderSide(color: pm.line))),
                             child: Row(
                               children: <Widget>[
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Text(label, style: PmText.sans(14, weight: FontWeight.w500, color: pm.ink)),
+                                      Text(label,
+                                          style: PmText.sans(14,
+                                              weight: FontWeight.w500,
+                                              color: pm.ink)),
                                       const SizedBox(height: 2),
-                                      Text(hint, style: PmText.sans(11.5, color: pm.ink2)),
+                                      Text(hint,
+                                          style: PmText.sans(11.5,
+                                              color: pm.ink2)),
                                     ],
                                   ),
                                 ),
@@ -117,12 +162,18 @@ class SettingsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   PmTile(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
-                    onTap: () => PmNav.push<void>(context, const OfflineScreen()),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 14),
+                    onTap: () =>
+                        PmNav.push<void>(context, const OfflineScreen()),
                     child: Row(
                       children: <Widget>[
-                        Expanded(child: Text('Carte hors-ligne', style: PmText.sans(14, weight: FontWeight.w500, color: pm.ink))),
-                        Text('28 Mo · à jour', style: PmText.mono(11.5, color: pm.ink2)),
+                        Expanded(
+                            child: Text('Carte hors-ligne',
+                                style: PmText.sans(14,
+                                    weight: FontWeight.w500, color: pm.ink))),
+                        Text('28 Mo · à jour',
+                            style: PmText.mono(11.5, color: pm.ink2)),
                       ],
                     ),
                   ),

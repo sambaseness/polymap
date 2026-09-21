@@ -102,7 +102,8 @@ class _Rail extends StatelessWidget {
     final active = HomeShell.tabForPage(page);
     return Container(
       width: PmLayout.railWidth,
-      padding: EdgeInsets.only(top: MediaQuery.paddingOf(context).top + 18, bottom: 18),
+      padding: EdgeInsets.only(
+          top: MediaQuery.paddingOf(context).top + 18, bottom: 18),
       decoration: BoxDecoration(
         color: pm.surf,
         border: Border(right: BorderSide(color: pm.line)),
@@ -112,7 +113,10 @@ class _Rail extends StatelessWidget {
           const PmLogo(size: 36),
           const SizedBox(height: 26),
           for (var i = 0; i < PmBottomNav.labels.length; i++) ...<Widget>[
-            _RailItem(index: i, on: active == i, onTap: () => HomeShell.selectTab(context, i)),
+            _RailItem(
+                index: i,
+                on: active == i,
+                onTap: () => HomeShell.selectTab(context, i)),
             const SizedBox(height: 6),
           ],
           const Spacer(),
@@ -158,7 +162,8 @@ class _RailItem extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   PmBottomNav.labels[index],
-                  style: PmText.sans(10.5, weight: on ? FontWeight.w600 : FontWeight.w400, color: c),
+                  style: PmText.sans(10.5,
+                      weight: on ? FontWeight.w600 : FontWeight.w400, color: c),
                 ),
               ],
             ),

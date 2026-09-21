@@ -96,13 +96,17 @@ class PmButton extends StatelessWidget {
     final Color fg = switch (v) {
       PmButtonVariant.primary => pm.onBlue,
       PmButtonVariant.secondary => pm.ink,
-      PmButtonVariant.ar || PmButtonVariant.glass || PmButtonVariant.brand => PmFixed.white,
+      PmButtonVariant.ar ||
+      PmButtonVariant.glass ||
+      PmButtonVariant.brand =>
+        PmFixed.white,
       PmButtonVariant.ghost || PmButtonVariant.text => pm.ink2,
       PmButtonVariant.disabled => PmFixed.disabledInk,
     };
     final BorderSide? border = switch (v) {
       PmButtonVariant.secondary => BorderSide(color: pm.line),
-      PmButtonVariant.glass => BorderSide(color: PmFixed.white.withValues(alpha: 0.22)),
+      PmButtonVariant.glass =>
+        BorderSide(color: PmFixed.white.withValues(alpha: 0.22)),
       _ => null,
     };
     final weight = v == PmButtonVariant.ghost || v == PmButtonVariant.text
@@ -145,8 +149,10 @@ class PmButton extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: enabled ? onTap : null,
-        mouseCursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.forbidden,
-        child: SizedBox(height: h, width: expand ? double.infinity : null, child: content),
+        mouseCursor:
+            enabled ? SystemMouseCursors.click : SystemMouseCursors.forbidden,
+        child: SizedBox(
+            height: h, width: expand ? double.infinity : null, child: content),
       ),
     );
 

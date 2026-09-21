@@ -55,7 +55,8 @@ class CampusMap extends StatefulWidget {
   State<CampusMap> createState() => _CampusMapState();
 }
 
-class _CampusMapState extends State<CampusMap> with SingleTickerProviderStateMixin {
+class _CampusMapState extends State<CampusMap>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _t = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 2400),
@@ -82,7 +83,8 @@ class _CampusMapState extends State<CampusMap> with SingleTickerProviderStateMix
                 roads: widget.roads,
                 roadOpacity: widget.roadOpacity,
                 showLabels: widget.showLabels,
-                labelStyle: PmText.sans(8.5, weight: FontWeight.w500, color: pm.bldgInk, height: 1.15),
+                labelStyle: PmText.sans(8.5,
+                    weight: FontWeight.w500, color: pm.bldgInk, height: 1.15),
               ),
             ),
           ),
@@ -96,7 +98,8 @@ class _CampusMapState extends State<CampusMap> with SingleTickerProviderStateMix
                   route: widget.route,
                   navigating: widget.navigating,
                   userPosition: widget.userPosition,
-                  labelStyle: PmText.sans(10, weight: FontWeight.w600, color: pm.onBlue),
+                  labelStyle: PmText.sans(10,
+                      weight: FontWeight.w600, color: pm.onBlue),
                 ),
               ),
             ),
@@ -106,7 +109,8 @@ class _CampusMapState extends State<CampusMap> with SingleTickerProviderStateMix
   }
 }
 
-Offset _pct(Offset p, Size s) => Offset(p.dx / 100 * s.width, p.dy / 100 * s.height);
+Offset _pct(Offset p, Size s) =>
+    Offset(p.dx / 100 * s.width, p.dy / 100 * s.height);
 
 class _BasePainter extends CustomPainter {
   _BasePainter({
@@ -143,8 +147,11 @@ class _BasePainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1;
     for (final b in buildings) {
-      final rect = Rect.fromLTWH(b.x / 100 * size.width, b.y / 100 * size.height,
-          b.w / 100 * size.width, b.h / 100 * size.height);
+      final rect = Rect.fromLTWH(
+          b.x / 100 * size.width,
+          b.y / 100 * size.height,
+          b.w / 100 * size.width,
+          b.h / 100 * size.height);
       final rr = RRect.fromRectAndRadius(rect, const Radius.circular(4));
       fill.color = b.isGreen ? pm.green : pm.bldg;
       stroke.color = b.isGreen ? pm.green : pm.line;
@@ -159,7 +166,8 @@ class _BasePainter extends CustomPainter {
         maxLines: 2,
         ellipsis: '…',
       )..layout(maxWidth: math.max(0, rect.width - 4));
-      if (tp.height > rect.height - 2) continue; // too small to fit, like `overflow: hidden`
+      if (tp.height > rect.height - 2)
+        continue; // too small to fit, like `overflow: hidden`
       tp.paint(canvas, rect.center - Offset(tp.width / 2, tp.height / 2));
     }
   }
@@ -205,16 +213,24 @@ class _OverlayPainter extends CustomPainter {
         canvas.drawPath(path, _line(pm.blue, 5));
         // Moving white dashes: 6 on / 8 off, one period (14 px) per 1.6 s.
         final phase = (t * 2.4 / 1.6) * 28;
-        canvas.drawPath(dashPath(path, dash: 6, gap: 8, phase: -phase), _line(pm.onBlue, 2));
+        canvas.drawPath(dashPath(path, dash: 6, gap: 8, phase: -phase),
+            _line(pm.onBlue, 2));
         // Start: 14 px, surface fill, 3 px brown ring.
         final start = _pct(r.start, size);
         canvas.drawCircle(start, 7, Paint()..color = pm.surf);
-        canvas.drawCircle(start, 5.5, Paint()..color = pm.brown..style = PaintingStyle.stroke..strokeWidth = 3);
+        canvas.drawCircle(
+            start,
+            5.5,
+            Paint()
+              ..color = pm.brown
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 3);
         _destinationLabel(canvas, _pct(r.end, size), r.route.destShort);
       }
     }
     final u = userPosition;
-    if (u != null) _pulseDot(canvas, _pct(u, size), outer: 16, inset: 4, ring: 2);
+    if (u != null)
+      _pulseDot(canvas, _pct(u, size), outer: 16, inset: 4, ring: 2);
   }
 
   Paint _line(Color c, double w) => Paint()
@@ -234,14 +250,22 @@ class _OverlayPainter extends CustomPainter {
   }
 
   /// `pm-pulse`: scale 1 → 1.6, opacity .85 → .15, ease-in-out, 2.4 s.
-  void _pulseDot(Canvas canvas, Offset c, {required double outer, required double inset, required double ring}) {
+  void _pulseDot(Canvas canvas, Offset c,
+      {required double outer, required double inset, required double ring}) {
     final k = 0.5 - 0.5 * math.cos(t * 2 * math.pi); // 0→1→0
     final scale = 1 + 0.6 * k;
     final alpha = 0.85 - 0.7 * k;
-    canvas.drawCircle(c, outer / 2 * scale, Paint()..color = pm.blue.withValues(alpha: alpha));
+    canvas.drawCircle(c, outer / 2 * scale,
+        Paint()..color = pm.blue.withValues(alpha: alpha));
     final inner = outer / 2 - inset;
     canvas.drawCircle(c, inner, Paint()..color = pm.blue);
-    canvas.drawCircle(c, inner - ring / 2, Paint()..color = pm.surf..style = PaintingStyle.stroke..strokeWidth = ring);
+    canvas.drawCircle(
+        c,
+        inner - ring / 2,
+        Paint()
+          ..color = pm.surf
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = ring);
   }
 
   /// Blue pill with the destination name + a 2×10 stick, anchored at [p].
@@ -254,8 +278,10 @@ class _OverlayPainter extends CustomPainter {
     const stick = 10.0;
     final w = tp.width + 16, h = tp.height + 8;
     final rect = Rect.fromLTWH(p.dx - w / 2, p.dy - stick - h, w, h);
-    canvas.drawRect(Rect.fromLTWH(p.dx - 1, p.dy - stick, 2, stick), Paint()..color = pm.blue);
-    canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(7)), Paint()..color = pm.blue);
+    canvas.drawRect(Rect.fromLTWH(p.dx - 1, p.dy - stick, 2, stick),
+        Paint()..color = pm.blue);
+    canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(7)),
+        Paint()..color = pm.blue);
     tp.paint(canvas, rect.topLeft + const Offset(8, 4));
   }
 
