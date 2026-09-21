@@ -5,10 +5,6 @@ import 'package:provider/provider.dart';
 import '../state/app_state.dart';
 import '../theme/pm_colors.dart';
 import '../theme/pm_text.dart';
-import '../widgets/camera_backdrop.dart';
-import '../widgets/pm_button.dart';
-import '../widgets/pm_primitives.dart';
-import 'building_screen.dart';
 
 /// 04 — Localisation par QR. Indoor re-localisation where GPS fails.
 ///
